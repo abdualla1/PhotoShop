@@ -1,14 +1,13 @@
-#include <bits/stdc++.h>
+#include <iostream>
 #include "Image_Class.h"
-
+using namespace std;
 #define endl '\n'
 #define ll long long
-#define fast ios_base::sync_with_stdio(0); cin.tie(0); cout.tie(0);
+#define fast ios::sync_with_stdio(0); cin.tie(0); cout.tie(0);
 
-using namespace std;
-
-signed main(){
+int main() {
     fast
 
     return 0;
+
 }

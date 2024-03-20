@@ -247,7 +247,6 @@ public:
 
         imageData[(y * width + x) * channels + c] = value;
     }
-
     /**
      * @brief Overloaded function call operator to access pixels.
      *
@@ -260,8 +259,6 @@ public:
         return getPixel(row, col, channel);
     }
 };
-
-
 
 #endif // _IMAGE_CLASS_H
 

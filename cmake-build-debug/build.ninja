@@ -55,6 +55,12 @@ build CMakeFiles/PhotoShop.dir/main.cpp.obj: CXX_COMPILER__PhotoShop_unscanned_D
   OBJECT_DIR = CMakeFiles\PhotoShop.dir
   OBJECT_FILE_DIR = CMakeFiles\PhotoShop.dir
 
+build CMakeFiles/PhotoShop.dir/Filters/invert_filter.cpp.obj: CXX_COMPILER__PhotoShop_unscanned_Debug C$:/Users/ahmed/OneDrive/Desktop/fuck$ you$ ramly/PhotoShop/Filters/invert_filter.cpp || cmake_object_order_depends_target_PhotoShop
+  DEP_FILE = CMakeFiles\PhotoShop.dir\Filters\invert_filter.cpp.obj.d
+  FLAGS = -g -std=gnu++23 -fdiagnostics-color=always
+  OBJECT_DIR = CMakeFiles\PhotoShop.dir
+  OBJECT_FILE_DIR = CMakeFiles\PhotoShop.dir\Filters
+
 
 # =============================================================================
 # Link build statements for EXECUTABLE target PhotoShop
@@ -63,7 +69,7 @@ build CMakeFiles/PhotoShop.dir/main.cpp.obj: CXX_COMPILER__PhotoShop_unscanned_D
 #############################################
 # Link the executable PhotoShop.exe
 
-build PhotoShop.exe: CXX_EXECUTABLE_LINKER__PhotoShop_Debug CMakeFiles/PhotoShop.dir/main.cpp.obj
+build PhotoShop.exe: CXX_EXECUTABLE_LINKER__PhotoShop_Debug CMakeFiles/PhotoShop.dir/main.cpp.obj CMakeFiles/PhotoShop.dir/Filters/invert_filter.cpp.obj
   FLAGS = -g
   LINK_LIBRARIES = -lkernel32 -luser32 -lgdi32 -lwinspool -lshell32 -lole32 -loleaut32 -luuid -lcomdlg32 -ladvapi32
   OBJECT_DIR = CMakeFiles\PhotoShop.dir

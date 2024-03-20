@@ -1,5 +1,7 @@
 # ninja log v5
-0	1720	7326702354529173	CMakeFiles/PhotoShop.dir/main.cpp.obj	c57835a928bc717e
-1724	1877	7326702356072864	PhotoShop.exe	d0dceebbf42d96dc
-3	1692	7326706997014885	CMakeFiles/PhotoShop.dir/main.cpp.obj	c57835a928bc717e
+5	1854	7326751215020454	CMakeFiles/PhotoShop.dir/main.cpp.obj	c57835a928bc717e
 1693	1803	7326706998083071	PhotoShop.exe	d0dceebbf42d96dc
+11	1860	7326751215409368	CMakeFiles/PhotoShop.dir/Filters/invert_filter.cpp.obj	a30dd341ce6dc74
+2	379	7326751766368098	build.ninja	38ec092c59b9d737
+4	1615	7326751783875925	CMakeFiles/PhotoShop.dir/Filters/invert_filter.cpp.obj	fbe43308e16a3f47
+3	442	7326752393498734	CMakeFiles/PhotoShop.dir/main.cpp.obj	c57835a928bc717e

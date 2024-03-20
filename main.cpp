@@ -7,7 +7,7 @@ using namespace std;
 
 int main() {
     fast
-
+    couot << "HEllO WORLD\n";
     return 0;
 
 }

@@ -205,7 +205,7 @@ public:
      * @return Reference to the pixel value.
      * @throws std::out_of_range If the coordinates or channel index is out of bounds.
      */
-    unsigned char& getPixel(int x, int y, int c) {
+    unsigned char & getPixel(int x, int y, int c)  {
         if (x > width || x < 0) {
             std::cerr << "Out of width bounds" << '\n';
             throw std::out_of_range("Out of bounds, Cannot exceed width value");

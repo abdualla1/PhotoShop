@@ -3,6 +3,8 @@
 
 using namespace std;
 const int FRAME_WIDTH = 10;
+// Function to apply the invert filter to an image
+// The invert filter inverts the color of each pixel in the image
 void invertFilter(Image &img) {
     for (int i = 0; i < img.width; i++) {
         for (int j = 0; j < img.height; j++) {
@@ -12,8 +14,9 @@ void invertFilter(Image &img) {
         }
     }
 }
+// Function to rotate an image 90 degrees clockwise
 
-void rotate90(Image &img, Image &newImg) {
+void rotate90( Image &img, Image &newImg) {
     for (int i = 0; i < img.width; i++) {
         for (int j = 0; j < img.height; j++) {
             for (int c = 0; c < img.channels; c++) {
@@ -22,8 +25,9 @@ void rotate90(Image &img, Image &newImg) {
         }
     }
 }
+// Function to rotate an image 180 degrees
 
-void rotate180(Image &img, Image &newImg) {
+void rotate180( Image &img, Image &newImg) {
     for (int i = 0; i < img.width; i++) {
         for (int j = 0; j < img.height; j++) {
             for (int c = 0; c < img.channels; c++) {
@@ -32,8 +36,8 @@ void rotate180(Image &img, Image &newImg) {
         }
     }
 }
-
-void rotate270(Image &img, Image &newImg) {
+// Function to rotate an image 270 degrees clockwise
+void rotate270( Image &img, Image &newImg) {
     for (int i = 0; i < img.width; i++) {
         for (int j = 0; j < img.height; j++) {
             for (int c = 0; c < img.channels; c++) {
@@ -42,6 +46,8 @@ void rotate270(Image &img, Image &newImg) {
         }
     }
 }
+// Function to apply a blur filter to an image
+// The blur filter blurs the image by averaging the color of each pixel with the color of its neighbors
 
 void blurFilter(Image &img, int blurLevel) {
     // Create a padded image
@@ -78,7 +84,9 @@ void blurFilter(Image &img, int blurLevel) {
         }
     }
 }
-
+// Function to add a frame to an image
+// The frame is added around the border of the image
+// The frame can be either simple or fancy
 void addFrame(Image &img, string style, string color) {
     unsigned char r = 0, g = 0, b = 0;
     if (color == "RED") {
@@ -126,6 +134,27 @@ void addFrame(Image &img, string style, string color) {
         }
     }
 }
+// Function to copy the contents of one image to another
+// The function first deallocates the memory of the destination image, then allocates new memory and copies the contents of the source image to the destination image
+
+void copyImage(Image& img, const Image& other) {
+    if (&img != &other) { // protect against invalid self-assignment
+        // 1: deallocate old memory
+        if (img.imageData != nullptr) {
+            stbi_image_free(img.imageData);
+        }
+
+        // 2: allocate new memory and copy the elements
+        img.width = other.width;
+        img.height = other.height;
+        img.channels = other.channels;
+        img.imageData = (unsigned char*)malloc(img.width * img.height * img.channels);
+        memcpy(img.imageData, other.imageData, img.width * img.height * img.channels);
+    }
+}
+// Function to apply a series of filters to an image
+// The function prompts the user to choose a filter, applies the chosen filter to the image, and repeats until the user chooses to save the image and exit
+
 void applyFilters(Image &img, const string& outputFilename) {
     string style, color;
     int choice;
@@ -134,6 +163,7 @@ void applyFilters(Image &img, const string& outputFilename) {
         cin >> choice;
         Image img90(img.height, img.width);
         Image img180(img.width, img.height);
+        Image img270(img.height, img.width);
         switch (choice) {
             case 1:
                 invertFilter(img);
@@ -142,17 +172,17 @@ void applyFilters(Image &img, const string& outputFilename) {
             case 2:
                 rotate90(img, img90);
                 cout << "Image rotated 90 degrees successfully.\n";
-                img = img90; // Update img with rotated image
+                copyImage(img, img90); // Update img with rotated image
                 break;
             case 3:
                 rotate180(img, img180);
                 cout << "Image rotated 180 degrees successfully.\n";
-                img = img180; // Update img with rotated image
+                copyImage(img, img180); // Update img with rotated image
                 break;
             case 4:
-                rotate270(img, img90);
+                rotate270(img, img270);
                 cout << "Image rotated 270 degrees successfully.\n";
-                img = img90; // Update img with rotated image
+                copyImage(img, img270); // Update img with rotated image
                 break;
             case 5:
                 int blurLevel;
@@ -179,7 +209,6 @@ void applyFilters(Image &img, const string& outputFilename) {
         }
     } while (choice != 7);
 }
-
 int main() {
     string inputFilename, outputFilename;
     int choice;

@@ -176,31 +176,29 @@ void sunlightFilter(Image &img) {
         }
     }
 }
-void oilPaintingFilter(Image &img, int radius = 5, int levels = 256) {
+void oilPaintingFilter(Image &img, int radius = 3, int levels = 256) {
     Image newImg(img.width, img.height);
     for (int i = 0; i < img.width; i++) {
         for (int j = 0; j < img.height; j++) {
-            vector<int> intensityCount(levels, 0);
-            vector<int> sumR(levels, 0), sumG(levels, 0), sumB(levels, 0);
+            vector<vector<int>> intensityCount(img.channels, vector<int>(levels, 0));
+            vector<vector<int>> sum(img.channels, vector<int>(levels, 0));
 
             for (int dx = -radius; dx <= radius; dx++) {
                 for (int dy = -radius; dy <= radius; dy++) {
                     if (i + dx >= 0 && i + dx < img.width && j + dy >= 0 && j + dy < img.height) {
-                        int intensity = img(i + dx, j + dy, 0) * 0.299 + img(i + dx, j + dy, 1) * 0.587 + img(i + dx, j + dy, 2) * 0.114;
-                        intensity = intensity * levels / 256;
-
-                        intensityCount[intensity]++;
-                        sumR[intensity] += img(i + dx, j + dy, 0);
-                        sumG[intensity] += img(i + dx, j + dy, 1);
-                        sumB[intensity] += img(i + dx, j + dy, 2);
+                        for (int c = 0; c < img.channels; c++) {
+                            int intensity = img(i + dx, j + dy, c) * levels / 256;
+                            intensityCount[c][intensity]++;
+                            sum[c][intensity] += img(i + dx, j + dy, c);
+                        }
                     }
                 }
             }
 
-            int maxIndex = max_element(intensityCount.begin(), intensityCount.end()) - intensityCount.begin();
-            newImg(i, j, 0) = sumR[maxIndex] / intensityCount[maxIndex];
-            newImg(i, j, 1) = sumG[maxIndex] / intensityCount[maxIndex];
-            newImg(i, j, 2) = sumB[maxIndex] / intensityCount[maxIndex];
+            for (int c = 0; c < img.channels; c++) {
+                int maxIndex = max_element(intensityCount[c].begin(), intensityCount[c].end()) - intensityCount[c].begin();
+                newImg(i, j, c) = sum[c][maxIndex] / intensityCount[c][maxIndex];
+            }
         }
     }
 
@@ -378,13 +376,13 @@ void applyFilters(Image &img, const string& outputFilename) {
     } while (choice != 13);
 }
 int main() {
-    string inputFilename, outputFilename;
+    string inputFilename = "night3.jpg", outputFilename= "tt.png";
     int choice;
     do {
-        cout << "Enter input filename: ";
-        cin >> inputFilename;
-        cout << "Enter output filename: ";
-        cin >> outputFilename;
+//        cout << "Enter input filename: ";
+//        cin >> inputFilename;
+//        cout << "Enter output filename: ";
+//        cin >> outputFilename;
 
         Image img(inputFilename);
         applyFilters(img, outputFilename);

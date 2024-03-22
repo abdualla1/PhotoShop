@@ -154,12 +154,152 @@ void copyImage(Image& img, const Image& other) {
 }
 // Function to apply a series of filters to an image
 // The function prompts the user to choose a filter, applies the chosen filter to the image, and repeats until the user chooses to save the image and exit
+// Function to apply a "sunlight" filter to an image
+void sunlightFilter(Image &img) {
+    for (int i = 0; i < img.width; i++) {
+        for (int j = 0; j < img.height; j++) {
+            for (int c = 0; c < img.channels; c++) {
+                // Increase brightness
+                int new_value = img(i, j, c) + 50;
+                img(i, j, c) = new_value > 255 ? 255 : new_value;
 
+                // Adjust color balance to give a warmer tone
+                if (c == 0) { // Red channel
+                    new_value = img(i, j, c) + 30;
+                    img(i, j, c) = new_value > 255 ? 255 : new_value;
+                }
+                if (c == 2) { // Blue channel
+                    new_value = img(i, j, c) - 20;
+                    img(i, j, c) = new_value < 0 ? 0 : new_value;
+                }
+            }
+        }
+    }
+}
+void oilPaintingFilter(Image &img, int radius = 5, int levels = 256) {
+    Image newImg(img.width, img.height);
+    for (int i = 0; i < img.width; i++) {
+        for (int j = 0; j < img.height; j++) {
+            vector<int> intensityCount(levels, 0);
+            vector<int> sumR(levels, 0), sumG(levels, 0), sumB(levels, 0);
+
+            for (int dx = -radius; dx <= radius; dx++) {
+                for (int dy = -radius; dy <= radius; dy++) {
+                    if (i + dx >= 0 && i + dx < img.width && j + dy >= 0 && j + dy < img.height) {
+                        int intensity = img(i + dx, j + dy, 0) * 0.299 + img(i + dx, j + dy, 1) * 0.587 + img(i + dx, j + dy, 2) * 0.114;
+                        intensity = intensity * levels / 256;
+
+                        intensityCount[intensity]++;
+                        sumR[intensity] += img(i + dx, j + dy, 0);
+                        sumG[intensity] += img(i + dx, j + dy, 1);
+                        sumB[intensity] += img(i + dx, j + dy, 2);
+                    }
+                }
+            }
+
+            int maxIndex = max_element(intensityCount.begin(), intensityCount.end()) - intensityCount.begin();
+            newImg(i, j, 0) = sumR[maxIndex] / intensityCount[maxIndex];
+            newImg(i, j, 1) = sumG[maxIndex] / intensityCount[maxIndex];
+            newImg(i, j, 2) = sumB[maxIndex] / intensityCount[maxIndex];
+        }
+    }
+
+    copyImage(img, newImg);
+}
+void tvFilter(Image &img) {
+    srand(time(0)); // Seed the random number generator
+    for (int i = 0; i < img.width; i++) {
+        for (int j = 0; j < img.height; j++) {
+            for (int c = 0; c < img.channels; c++) {
+                // Increase blue channel
+                if (c == 2) { // Blue channel
+                    int new_value = img(i, j, c) + 50;
+                    img(i, j, c) = new_value > 255 ? 255 : new_value;
+                }
+                // Decrease red and green channels
+                if (c == 0 || c == 1) { // Red or Green channel
+                    int new_value = img(i, j, c) - 20;
+                    img(i, j, c) = new_value < 0 ? 0 : new_value;
+                }
+                // Add noise
+                int noise = rand() % 20 - 10; // Generate a random number between -10 and 10
+                int new_value = img(i, j, c) + noise;
+                img(i, j, c) = new_value < 0 ? 0 : new_value > 255 ? 255 : new_value;
+            }
+        }
+    }
+}
+void nightPurpleFilter(Image &img) {
+    for (int i = 0; i < img.width; i++) {
+        for (int j = 0; j < img.height; j++) {
+            for (int c = 0; c < img.channels; c++) {
+                // Increase red and blue channels
+                if (c == 0 || c == 2) { // Red or Blue channel
+                    int new_value = img(i, j, c) + 50;
+                    img(i, j, c) = new_value > 255 ? 255 : new_value;
+                }
+                // Decrease green channel
+                if (c == 1) { // Green channel
+                    int new_value = img(i, j, c) - 20;
+                    img(i, j, c) = new_value < 0 ? 0 : new_value;
+                }
+            }
+        }
+    }
+}
+void infraredFilter(Image &img) {
+    for (int i = 0; i < img.width; i++) {
+        for (int j = 0; j < img.height; j++) {
+            // Convert to grayscale
+            int gray = 0.299 * img(i, j, 0) + 0.587 * img(i, j, 1) + 0.114 * img(i, j, 2);
+            img(i, j, 0) = gray;
+            img(i, j, 1) = gray;
+            img(i, j, 2) = gray;
+
+            // Add red tint
+            img(i, j, 0) = min(255, img(i, j, 0) + 100);
+        }
+    }
+}
+void skewImage(Image &img, double skewFactor) {
+    // Calculate the skew factor in pixels
+    int skewPixels = -tan(skewFactor) * img.height;
+
+    // Calculate the new dimensions of the image
+    int newWidth = img.width + abs(skewPixels);
+    int newHeight = img.height;
+
+    // Calculate the horizontal offset to center the skewed image
+    int offsetX = skewPixels < 0 ? abs(skewPixels) : 0;
+
+    // Create a new image with the new dimensions
+    Image newImg(newWidth, newHeight);
+
+    // Iterate over each pixel in the original image
+    for (int i = 0; i < img.width; i++) {
+        for (int j = 0; j < img.height; j++) {
+            // Calculate the new position of the pixel
+            int newX = i + skewPixels * (j / (double)img.height) + offsetX; // Adjust the x-coordinate based on skew factor and offset
+            int newY = j;
+
+            // Check if the new position is within the bounds of the new image
+            if (newX >= 0 && newX < newWidth && newY >= 0 && newY < newHeight) {
+                // Set the color of the new position to the color of the original pixel
+                for (int c = 0; c < img.channels; c++) {
+                    newImg(newX, newY, c) = img(i, j, c);
+                }
+            }
+        }
+    }
+
+    // Replace the original image with the new image
+    copyImage(img, newImg);
+}
 void applyFilters(Image &img, const string& outputFilename) {
     string style, color;
     int choice;
     do {
-        cout << "1. Invert\n2. Rotate 90\n3. Rotate 180\n4. Rotate 270\n5. Blur\n6. Add Frame\n7. Save and Exit\nEnter your choice: ";
+        cout << "1. Invert\n2. Rotate 90\n3. Rotate 180\n4. Rotate 270\n5. Blur\n6. Add Frame\n7. Sunlight\n8. Oil Painting\n9. TV Filter\n10. Night Purple Filter\n11. Infrared Filter\n12. Skew Image\n13. Save and Exit\nEnter your choice: ";
         cin >> choice;
         Image img90(img.height, img.width);
         Image img180(img.width, img.height);
@@ -200,6 +340,34 @@ void applyFilters(Image &img, const string& outputFilename) {
                 cout << "Frame added successfully.\n";
                 break;
             case 7:
+                sunlightFilter(img);
+                cout << "Sunlight filter applied successfully.\n";
+                break;
+            case 8:
+                oilPaintingFilter(img);
+                cout << "Oil painting filter applied successfully.\n";
+                break;
+            case 9:
+                tvFilter(img);
+                cout << "TV filter applied successfully.\n";
+                break;
+            case 10:
+                nightPurpleFilter(img);
+                cout << "Night Purple filter applied successfully.\n";
+                break;
+            case 11:
+                infraredFilter(img);
+                cout << "Infrared filter applied successfully.\n";
+                break;
+            case 12:
+                double skewFactor;
+                cout << "Enter skew factor (in degrees): ";
+                cin >> skewFactor;
+                skewFactor = skewFactor * M_PI / 180.0; // Convert to radians
+                skewImage(img, skewFactor);
+                cout << "Skew filter applied successfully.\n";
+                break;
+            case 13:
                 img.saveImage(outputFilename);
                 cout << "Image saved successfully.\n";
                 break;
@@ -207,7 +375,7 @@ void applyFilters(Image &img, const string& outputFilename) {
                 cout << "Invalid choice\n";
                 break;
         }
-    } while (choice != 7);
+    } while (choice != 13);
 }
 int main() {
     string inputFilename, outputFilename;

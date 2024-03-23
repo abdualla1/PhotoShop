@@ -1,3 +1,0 @@
-C:/Users/ahmed/OneDrive/Desktop/fuck you ramly/PhotoShop/cmake-build-debug/CMakeFiles/PhotoShop.dir
-C:/Users/ahmed/OneDrive/Desktop/fuck you ramly/PhotoShop/cmake-build-debug/CMakeFiles/edit_cache.dir
-C:/Users/ahmed/OneDrive/Desktop/fuck you ramly/PhotoShop/cmake-build-debug/CMakeFiles/rebuild_cache.dir

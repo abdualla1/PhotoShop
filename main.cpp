@@ -176,32 +176,60 @@ void sunlightFilter(Image &img) {
         }
     }
 }
-void oilPaintingFilter(Image &img, int radius = 3, int levels = 256) {
+int calculateIntensityBin(int r, int g, int b, int intensityLevels) {
+    return static_cast<int>((static_cast<double>((r + g + b) / 3) * intensityLevels) / 255.0);
+}
+void oilPaintingFilter(Image &img) {
+    int radius = 5;
+    int intensityLevels = 20;
+    // Get image size
+    int imageSizeX = img.width;
+    int imageSizeY = img.height;
     Image newImg(img.width, img.height);
-    for (int i = 0; i < img.width; i++) {
-        for (int j = 0; j < img.height; j++) {
-            vector<vector<int>> intensityCount(img.channels, vector<int>(levels, 0));
-            vector<vector<int>> sum(img.channels, vector<int>(levels, 0));
+    // Step 1: Calculate intensity count and sum of RGB values within radius
+    for (int y = 0; y < imageSizeY; ++y) {
+        for (int x = 0; x < imageSizeX; ++x) {
+            vector<int> intensityCount(intensityLevels, 0);
+            vector<int> averageR(intensityLevels, 0);
+            vector<int> averageG(intensityLevels, 0);
+            vector<int> averageB(intensityLevels, 0);
 
-            for (int dx = -radius; dx <= radius; dx++) {
-                for (int dy = -radius; dy <= radius; dy++) {
-                    if (i + dx >= 0 && i + dx < img.width && j + dy >= 0 && j + dy < img.height) {
-                        for (int c = 0; c < img.channels; c++) {
-                            int intensity = img(i + dx, j + dy, c) * levels / 256;
-                            intensityCount[c][intensity]++;
-                            sum[c][intensity] += img(i + dx, j + dy, c);
+            // Loop through pixels within radius
+            for (int dy = -radius; dy <= radius; ++dy) {
+                for (int dx = -radius; dx <= radius; ++dx) {
+                    int nx = x + dx;
+                    int ny = y + dy;
+
+                    // Check if within image boundaries
+                    if (nx >= 0 && nx < imageSizeX && ny >= 0 && ny < imageSizeY) {
+                        int curR = img(nx, ny, 0);
+                        int curG = img(nx, ny, 1);
+                        int curB = img(nx, ny, 2);
+
+                        int intensityBin = calculateIntensityBin(curR, curG, curB, intensityLevels);
+                        intensityCount[intensityBin]++;
+                        averageR[intensityBin] += curR;
+                        averageG[intensityBin] += curG;
+                        averageB[intensityBin] += curB;
+                    }
+                    int curMax = 0;
+                    int maxIndex = 0;
+                    for (int i = 0; i < intensityLevels; ++i) {
+                        if (intensityCount[i] > curMax) {
+                            curMax = intensityCount[i];
+                            maxIndex = i;
                         }
+                    }
+
+                    if(curMax != 0){
+                        newImg(x, y, 0) = averageR[maxIndex] / curMax;
+                        newImg(x, y, 1) = averageG[maxIndex] / curMax;
+                        newImg(x, y, 2) = averageB[maxIndex] / curMax;
                     }
                 }
             }
-
-            for (int c = 0; c < img.channels; c++) {
-                int maxIndex = max_element(intensityCount[c].begin(), intensityCount[c].end()) - intensityCount[c].begin();
-                newImg(i, j, c) = sum[c][maxIndex] / intensityCount[c][maxIndex];
-            }
         }
     }
-
     copyImage(img, newImg);
 }
 void tvFilter(Image &img) {
@@ -247,17 +275,15 @@ void nightPurpleFilter(Image &img) {
 }
 void infraredFilter(Image &img) {
     for (int i = 0; i < img.width; i++) {
-        for (int j = 0; j < img.height; j++) {
-            // Convert to grayscale
-            int gray = 0.299 * img(i, j, 0) + 0.587 * img(i, j, 1) + 0.114 * img(i, j, 2);
-            img(i, j, 0) = gray;
-            img(i, j, 1) = gray;
-            img(i, j, 2) = gray;
+         for (int j = 0; j < img.height; j++) {
+             double a=0;
+             a = img(i,j,0)*0.299+img(i,j,1)*0.587+img(i,j,2)*0.114;
+             img(i,j,0) = 255;
+             img(i,j,1) = 255-a;
+             img(i,j,2) = 255-a;
 
-            // Add red tint
-            img(i, j, 0) = min(255, img(i, j, 0) + 100);
-        }
-    }
+             }
+         }
 }
 void skewImage(Image &img, double skewFactor) {
     // Calculate the skew factor in pixels
@@ -376,7 +402,7 @@ void applyFilters(Image &img, const string& outputFilename) {
     } while (choice != 13);
 }
 int main() {
-    string inputFilename = "night3.jpg", outputFilename= "tt.png";
+    string inputFilename = "t.jpg", outputFilename= "tt.png";
     int choice;
     do {
 //        cout << "Enter input filename: ";

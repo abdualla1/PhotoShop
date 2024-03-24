@@ -158,79 +158,53 @@ void copyImage(Image& img, const Image& other) {
 void sunlightFilter(Image &img) {
     for (int i = 0; i < img.width; i++) {
         for (int j = 0; j < img.height; j++) {
-            for (int c = 0; c < img.channels; c++) {
-                // Increase brightness
-                int new_value = img(i, j, c) + 50;
-                img(i, j, c) = new_value > 255 ? 255 : new_value;
-
-                // Adjust color balance to give a warmer tone
-                if (c == 0) { // Red channel
-                    new_value = img(i, j, c) + 30;
-                    img(i, j, c) = new_value > 255 ? 255 : new_value;
-                }
-                if (c == 2) { // Blue channel
-                    new_value = img(i, j, c) - 20;
-                    img(i, j, c) = new_value < 0 ? 0 : new_value;
-                }
-            }
+            // Increase red and green channels, decrease blue channel
+            img(i, j, 0) = min(255, img(i, j, 0) + 30); // Red
+            img(i, j, 1) = min(255, img(i, j, 1) + 25); // Green
+            img(i, j, 2) = max(0, img(i, j, 2) - 30); // Blue
         }
     }
 }
-int calculateIntensityBin(int r, int g, int b, int intensityLevels) {
-    return static_cast<int>((static_cast<double>((r + g + b) / 3) * intensityLevels) / 255.0);
-}
-void oilPaintingFilter(Image &img) {
-    int radius = 5;
-    int intensityLevels = 20;
-    // Get image size
-    int imageSizeX = img.width;
-    int imageSizeY = img.height;
-    Image newImg(img.width, img.height);
-    // Step 1: Calculate intensity count and sum of RGB values within radius
-    for (int y = 0; y < imageSizeY; ++y) {
-        for (int x = 0; x < imageSizeX; ++x) {
-            vector<int> intensityCount(intensityLevels, 0);
-            vector<int> averageR(intensityLevels, 0);
-            vector<int> averageG(intensityLevels, 0);
-            vector<int> averageB(intensityLevels, 0);
+void oilPaintingFilter(Image &img, int radius = 5)
+{
+    // Create a copy of the original image
+    Image copy(img.width, img.height);
+    copyImage(copy, img);  // Copy pixel data from img to copy
 
-            // Loop through pixels within radius
-            for (int dy = -radius; dy <= radius; ++dy) {
-                for (int dx = -radius; dx <= radius; ++dx) {
-                    int nx = x + dx;
-                    int ny = y + dy;
+    // Loop over each pixel in the image
+    for (int i = 0; i < img.width; i++) {
+        for (int j = 0; j < img.height; j++) {
+            // Initialize a histogram for each color channel
+            std::vector<int> histR(256, 0), histG(256, 0), histB(256, 0);
 
-                    // Check if within image boundaries
-                    if (nx >= 0 && nx < imageSizeX && ny >= 0 && ny < imageSizeY) {
-                        int curR = img(nx, ny, 0);
-                        int curG = img(nx, ny, 1);
-                        int curB = img(nx, ny, 2);
+            // Loop over each pixel in the neighborhood
+            for (int di = -radius; di <= radius; di++) {
+                for (int dj = -radius; dj <= radius; dj++) {
+                    // Calculate the position of the neighboring pixel
+                    int ni = i + di;
+                    int nj = j + dj;
 
-                        int intensityBin = calculateIntensityBin(curR, curG, curB, intensityLevels);
-                        intensityCount[intensityBin]++;
-                        averageR[intensityBin] += curR;
-                        averageG[intensityBin] += curG;
-                        averageB[intensityBin] += curB;
-                    }
-                    int curMax = 0;
-                    int maxIndex = 0;
-                    for (int i = 0; i < intensityLevels; ++i) {
-                        if (intensityCount[i] > curMax) {
-                            curMax = intensityCount[i];
-                            maxIndex = i;
-                        }
-                    }
-
-                    if(curMax != 0){
-                        newImg(x, y, 0) = averageR[maxIndex] / curMax;
-                        newImg(x, y, 1) = averageG[maxIndex] / curMax;
-                        newImg(x, y, 2) = averageB[maxIndex] / curMax;
+                    // Check if the neighboring pixel is inside the image
+                    if (ni >= 0 && ni < img.width && nj >= 0 && nj < img.height) {
+                        // Increment the count of the color of the neighboring pixel in the histogram
+                        histR[copy(ni, nj, 0)]++;
+                        histG[copy(ni, nj, 1)]++;
+                        histB[copy(ni, nj, 2)]++;
                     }
                 }
             }
+
+            // Find the most frequent color in the histogram
+            int maxR = std::distance(histR.begin(), std::max_element(histR.begin(), histR.end()));
+            int maxG = std::distance(histG.begin(), std::max_element(histG.begin(), histG.end()));
+            int maxB = std::distance(histB.begin(), std::max_element(histB.begin(), histB.end()));
+
+            // Set the color of the current pixel to the most frequent color
+            img(i, j, 0) = maxR;
+            img(i, j, 1) = maxG;
+            img(i, j, 2) = maxB;
         }
     }
-    copyImage(img, newImg);
 }
 void tvFilter(Image &img) {
     srand(time(0)); // Seed the random number generator
@@ -248,7 +222,7 @@ void tvFilter(Image &img) {
                     img(i, j, c) = new_value < 0 ? 0 : new_value;
                 }
                 // Add noise
-                int noise = rand() % 20 - 10; // Generate a random number between -10 and 10
+                int noise = rand() % 40 - 20; // Generate a random number between -20 and 20
                 int new_value = img(i, j, c) + noise;
                 img(i, j, c) = new_value < 0 ? 0 : new_value > 255 ? 255 : new_value;
             }
@@ -402,7 +376,7 @@ void applyFilters(Image &img, const string& outputFilename) {
     } while (choice != 13);
 }
 int main() {
-    string inputFilename = "t.jpg", outputFilename= "tt.png";
+    string inputFilename = "wano.jpg", outputFilename= "tt.png";
     int choice;
     do {
 //        cout << "Enter input filename: ";

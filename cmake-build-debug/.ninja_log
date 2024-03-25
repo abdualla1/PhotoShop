@@ -1,7 +1,39 @@
 # ninja log v5
+<<<<<<< Updated upstream
 5	1854	7326751215020454	CMakeFiles/PhotoShop.dir/main.cpp.obj	c57835a928bc717e
 1693	1803	7326706998083071	PhotoShop.exe	d0dceebbf42d96dc
 11	1860	7326751215409368	CMakeFiles/PhotoShop.dir/Filters/invert_filter.cpp.obj	a30dd341ce6dc74
 2	379	7326751766368098	build.ninja	38ec092c59b9d737
 4	1615	7326751783875925	CMakeFiles/PhotoShop.dir/Filters/invert_filter.cpp.obj	fbe43308e16a3f47
 3	442	7326752393498734	CMakeFiles/PhotoShop.dir/main.cpp.obj	c57835a928bc717e
+=======
+5	3607	7331109377410471	CMakeFiles/PhotoShop.dir/main.cpp.obj	c57835a928bc717e
+3608	3792	7331109379248505	PhotoShop.exe	d0dceebbf42d96dc
+1	164	7326877245334261	build.ninja	38ec092c59b9d737
+5	4252	7331110365939885	CMakeFiles/PhotoShop.dir/main.cpp.obj	c57835a928bc717e
+4253	4389	7331110367275697	PhotoShop.exe	d0dceebbf42d96dc
+4	3933	7331111073909460	CMakeFiles/PhotoShop.dir/main.cpp.obj	c57835a928bc717e
+3934	4058	7331111075134613	PhotoShop.exe	d0dceebbf42d96dc
+4	4165	7331115884837380	CMakeFiles/PhotoShop.dir/main.cpp.obj	c57835a928bc717e
+4165	4306	7331115886234591	PhotoShop.exe	d0dceebbf42d96dc
+6	4240	7331117036262742	CMakeFiles/PhotoShop.dir/main.cpp.obj	c57835a928bc717e
+4241	4386	7331117037678932	PhotoShop.exe	d0dceebbf42d96dc
+4	3591	7331118219085626	CMakeFiles/PhotoShop.dir/main.cpp.obj	c57835a928bc717e
+3592	3704	7331118220211602	PhotoShop.exe	d0dceebbf42d96dc
+3	3720	7331118666652708	CMakeFiles/PhotoShop.dir/main.cpp.obj	c57835a928bc717e
+3720	3854	7331118667957805	PhotoShop.exe	d0dceebbf42d96dc
+4	4187	7331119491236616	CMakeFiles/PhotoShop.dir/main.cpp.obj	c57835a928bc717e
+4188	4335	7331119492689036	PhotoShop.exe	d0dceebbf42d96dc
+4	3993	7331121149869586	CMakeFiles/PhotoShop.dir/main.cpp.obj	c57835a928bc717e
+3994	4158	7331121151500217	PhotoShop.exe	d0dceebbf42d96dc
+5	3730	7331122004083842	CMakeFiles/PhotoShop.dir/main.cpp.obj	c57835a928bc717e
+3731	3895	7331122005705353	PhotoShop.exe	d0dceebbf42d96dc
+3	3384	7331123052014790	CMakeFiles/PhotoShop.dir/main.cpp.obj	c57835a928bc717e
+3384	3514	7331123053288966	PhotoShop.exe	d0dceebbf42d96dc
+3	3667	7331123899982487	CMakeFiles/PhotoShop.dir/main.cpp.obj	c57835a928bc717e
+3667	3786	7331123901147637	PhotoShop.exe	d0dceebbf42d96dc
+4	3520	7331124878711590	CMakeFiles/PhotoShop.dir/main.cpp.obj	c57835a928bc717e
+3520	3697	7331124880490736	PhotoShop.exe	d0dceebbf42d96dc
+4	3715	7331126168855388	CMakeFiles/PhotoShop.dir/main.cpp.obj	c57835a928bc717e
+3715	3845	7331126170120899	PhotoShop.exe	d0dceebbf42d96dc
+>>>>>>> Stashed changes

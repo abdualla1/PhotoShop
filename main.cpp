@@ -165,44 +165,38 @@ void sunlightFilter(Image &img) {
         }
     }
 }
-void oilPaintingFilter(Image &img, int radius = 5)
-{
-    // Create a copy of the original image
-    Image copy(img.width, img.height);
-    copyImage(copy, img);  // Copy pixel data from img to copy
-
-    // Loop over each pixel in the image
+void convertToGrayscale(Image &img) {
     for (int i = 0; i < img.width; i++) {
         for (int j = 0; j < img.height; j++) {
-            // Initialize a histogram for each color channel
-            std::vector<int> histR(256, 0), histG(256, 0), histB(256, 0);
+            int gray = (img(i, j, 0) + img(i, j, 1) + img(i, j, 2)) / 3;
+            img(i, j, 0) = gray;
+            img(i, j, 1) = gray;
+            img(i, j, 2) = gray;
+        }
+    }
+}
+void highPassFilter(Image &img, Image &blurredImg, int blurLevel = 5) {
+    // Apply a low-pass filter (blur) to the image
+    blurFilter(blurredImg, blurLevel);
 
-            // Loop over each pixel in the neighborhood
-            for (int di = -radius; di <= radius; di++) {
-                for (int dj = -radius; dj <= radius; dj++) {
-                    // Calculate the position of the neighboring pixel
-                    int ni = i + di;
-                    int nj = j + dj;
-
-                    // Check if the neighboring pixel is inside the image
-                    if (ni >= 0 && ni < img.width && nj >= 0 && nj < img.height) {
-                        // Increment the count of the color of the neighboring pixel in the histogram
-                        histR[copy(ni, nj, 0)]++;
-                        histG[copy(ni, nj, 1)]++;
-                        histB[copy(ni, nj, 2)]++;
-                    }
-                }
+    // Subtract the blurred image from the original image
+    for (int i = 0; i < img.width; i++) {
+        for (int j = 0; j < img.height; j++) {
+            for (int c = 0; c < img.channels; c++) {
+                int highPassValue = img(i, j, c) - blurredImg(i, j, c);
+                img(i, j, c) = max(0, min(255, highPassValue));
             }
-
-            // Find the most frequent color in the histogram
-            int maxR = std::distance(histR.begin(), std::max_element(histR.begin(), histR.end()));
-            int maxG = std::distance(histG.begin(), std::max_element(histG.begin(), histG.end()));
-            int maxB = std::distance(histB.begin(), std::max_element(histB.begin(), histB.end()));
-
-            // Set the color of the current pixel to the most frequent color
-            img(i, j, 0) = maxR;
-            img(i, j, 1) = maxG;
-            img(i, j, 2) = maxB;
+        }
+    }
+}
+void oilPaintingFilter(Image &img, int levels = 7) {
+    for (int i = 0; i < img.width; i++) {
+        for (int j = 0; j < img.height; j++) {
+            for (int c = 0; c < img.channels; c++) {
+                int color = img(i, j, c);
+                int newColor = ((color * levels) / 256) * (256 / levels);
+                img(i, j, c) = newColor;
+            }
         }
     }
 }
@@ -376,7 +370,7 @@ void applyFilters(Image &img, const string& outputFilename) {
     } while (choice != 13);
 }
 int main() {
-    string inputFilename = "wano.jpg", outputFilename= "tt.png";
+    string inputFilename = "s.png", outputFilename= "tt.png";
     int choice;
     do {
 //        cout << "Enter input filename: ";

@@ -3,19 +3,21 @@
 using namespace std;
 #define endl '\n'
 #define ll long long
-#define fast ios::sync_with_stdio(0); cin.tie(0); cout.tie(0);
-void test() {
-    Image img("test.jpg");
-    img.saveImage("test.png");
+void copyImage(Image& img, const Image& other) {
+    if (&img != &other) { // protect against invalid self-assignment
+        // 1: deallocate old memory
+        if (img.imageData != nullptr) {
+            stbi_image_free(img.imageData);
+        }
+
+        // 2: allocate new memory and copy the elements
+        img.width = other.width;
+        img.height = other.height;
+        img.channels = other.channels;
+        img.imageData = (unsigned char*)malloc(img.width * img.height * img.channels);
+        memcpy(img.imageData, other.imageData, img.width * img.height * img.channels);
+    }
 }
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-=======
-void 
->>>>>>> Stashed changes
-int main() {
-    fast
-=======
 void greyScale(Image &img)
 {
     for (int i = 0; i < img.width; i++)
@@ -668,12 +670,5 @@ int main() {
     } while (choice == 1);
 
     cout << "Exiting...\n";
->>>>>>> Stashed changes
-
-=======
-int main() {
-    fast
->>>>>>> Stashed changes
     return 0;
-
 }

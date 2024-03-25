@@ -2,7 +2,6 @@
 #include <bits/stdc++.h>
 
 using namespace std;
-const int FRAME_WIDTH = 10;
 
 // Function to apply the invert filter to an image
 // The invert filter inverts the color of each pixel in the image
@@ -90,6 +89,7 @@ void blurFilter(Image &img, int blurLevel) {
 // Function to add a frame to an image
 // The frame is added around the border of the image
 // The frame can be either simple or fancy
+int FRAME_WIDTH = 10;
 void addFrame(Image &img, string style, string color) {
     unsigned char r = 0, g = 0, b = 0;
     if (color == "RED") {
@@ -104,6 +104,7 @@ void addFrame(Image &img, string style, string color) {
         b = 255;
     }
 
+    int frameThickness = 3;
     if (style == "simple") {
         // Draw a gradient border around the entire image
         for (int i = 0; i < img.width; i++) {
@@ -123,13 +124,18 @@ void addFrame(Image &img, string style, string color) {
             }
         }
     } else if (style == "fancy") {
+         FRAME_WIDTH = 20;
         // Draw a double border around the original image with a circle in the corner squares
         for (int i = 0; i < img.width; i++) {
             for (int j = 0; j < img.height; j++) {
                 if (i < FRAME_WIDTH || i >= img.width - FRAME_WIDTH || j < FRAME_WIDTH ||
                     j >= img.height - FRAME_WIDTH) {
-                    if (i == 0 || i == FRAME_WIDTH - 1 || i == img.width - 1 || i == img.width - FRAME_WIDTH ||
-                        j == 0 || j == FRAME_WIDTH - 1 || j == img.height - 1 || j == img.height - FRAME_WIDTH) {
+                    if ((i >= 0 && i < frameThickness) || (i >= FRAME_WIDTH - frameThickness && i < FRAME_WIDTH) ||
+                        (i >= img.width - FRAME_WIDTH && i < img.width - FRAME_WIDTH + frameThickness) ||
+                        (i >= img.width - frameThickness && i < img.width) ||
+                        (j >= 0 && j < frameThickness) || (j >= FRAME_WIDTH - frameThickness && j < FRAME_WIDTH) ||
+                        (j >= img.height - FRAME_WIDTH && j < img.height - FRAME_WIDTH + frameThickness) ||
+                        (j >= img.height - frameThickness && j < img.height)) {
                         img(i, j, 0) = r;
                         img(i, j, 1) = g;
                         img(i, j, 2) = b;
@@ -420,10 +426,10 @@ int main() {
     string inputFilename = "luffy.jpg", outputFilename = "tt.png";
     int choice;
     do {
-//        cout << "Enter input filename: ";
-//        cin >> inputFilename;
-//        cout << "Enter output filename: ";
-//        cin >> outputFilename;
+        cout << "Enter input filename: ";
+        cin >> inputFilename;
+        cout << "Enter output filename: ";
+        cin >> outputFilename;
 
         Image img(inputFilename);
         applyFilters(img, outputFilename);

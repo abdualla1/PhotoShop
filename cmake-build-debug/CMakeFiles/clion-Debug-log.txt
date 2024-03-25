@@ -1,4 +1,4 @@
-"C:\Program Files\JetBrains\CLion 2023.3.4\bin\cmake\win\x64\bin\cmake.exe" -DCMAKE_BUILD_TYPE=Debug -G "CodeBlocks - MinGW Makefiles" -S C:\Users\ziadw\CLionProjects\Photoshop\PhotoShop -B C:\Users\ziadw\CLionProjects\Photoshop\PhotoShop\cmake-build-debug
+"C:\Program Files\JetBrains\CLion 2023.3.4\bin\cmake\win\x64\bin\cmake.exe" -DCMAKE_BUILD_TYPE=Debug -G "CodeBlocks - MinGW Makefiles" -S C:\Users\ziadw\OneDrive\Documents\Github\PhotoShop -B C:\Users\ziadw\OneDrive\Documents\Github\PhotoShop\cmake-build-debug
 CMake Deprecation Warning:
   Support for "Extra Generators" like
 

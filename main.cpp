@@ -3,6 +3,7 @@
 
 using namespace std;
 const int FRAME_WIDTH = 10;
+
 // Function to apply the invert filter to an image
 // The invert filter inverts the color of each pixel in the image
 void invertFilter(Image &img) {
@@ -16,7 +17,7 @@ void invertFilter(Image &img) {
 }
 // Function to rotate an image 90 degrees clockwise
 
-void rotate90( Image &img, Image &newImg) {
+void rotate90(Image &img, Image &newImg) {
     for (int i = 0; i < img.width; i++) {
         for (int j = 0; j < img.height; j++) {
             for (int c = 0; c < img.channels; c++) {
@@ -27,7 +28,7 @@ void rotate90( Image &img, Image &newImg) {
 }
 // Function to rotate an image 180 degrees
 
-void rotate180( Image &img, Image &newImg) {
+void rotate180(Image &img, Image &newImg) {
     for (int i = 0; i < img.width; i++) {
         for (int j = 0; j < img.height; j++) {
             for (int c = 0; c < img.channels; c++) {
@@ -36,8 +37,9 @@ void rotate180( Image &img, Image &newImg) {
         }
     }
 }
+
 // Function to rotate an image 270 degrees clockwise
-void rotate270( Image &img, Image &newImg) {
+void rotate270(Image &img, Image &newImg) {
     for (int i = 0; i < img.width; i++) {
         for (int j = 0; j < img.height; j++) {
             for (int c = 0; c < img.channels; c++) {
@@ -84,6 +86,7 @@ void blurFilter(Image &img, int blurLevel) {
         }
     }
 }
+
 // Function to add a frame to an image
 // The frame is added around the border of the image
 // The frame can be either simple or fancy
@@ -105,10 +108,14 @@ void addFrame(Image &img, string style, string color) {
         // Draw a gradient border around the entire image
         for (int i = 0; i < img.width; i++) {
             for (int j = 0; j < img.height; j++) {
-                if (i < FRAME_WIDTH || i >= img.width - FRAME_WIDTH || j < FRAME_WIDTH || j >= img.height - FRAME_WIDTH) {
-                    double distance = sqrt((i - img.width / 2.0) * (i - img.width / 2.0) + (j - img.height / 2.0) * (j - img.height / 2.0));
-                    double maxDistance = sqrt((img.width / 2.0) * (img.width / 2.0) + (img.height / 2.0) * (img.height / 2.0));
-                    unsigned char gradient = (unsigned char) ((distance / maxDistance) * 255 * 2.0); // Multiply by 1.5 to make the gradient stronger
+                if (i < FRAME_WIDTH || i >= img.width - FRAME_WIDTH || j < FRAME_WIDTH ||
+                    j >= img.height - FRAME_WIDTH) {
+                    double distance = sqrt((i - img.width / 2.0) * (i - img.width / 2.0) +
+                                           (j - img.height / 2.0) * (j - img.height / 2.0));
+                    double maxDistance = sqrt(
+                            (img.width / 2.0) * (img.width / 2.0) + (img.height / 2.0) * (img.height / 2.0));
+                    unsigned char gradient = (unsigned char) ((distance / maxDistance) * 255 *
+                                                              2.0); // Multiply by 1.5 to make the gradient stronger
                     img(i, j, 0) = r * (1 - gradient / 255.0);
                     img(i, j, 1) = g * (1 - gradient / 255.0);
                     img(i, j, 2) = b * (1 - gradient / 255.0);
@@ -119,12 +126,23 @@ void addFrame(Image &img, string style, string color) {
         // Draw a double border around the original image with a circle in the corner squares
         for (int i = 0; i < img.width; i++) {
             for (int j = 0; j < img.height; j++) {
-                if (i < FRAME_WIDTH || i >= img.width - FRAME_WIDTH || j < FRAME_WIDTH || j >= img.height - FRAME_WIDTH) {
-                    if (i == 0 || i == FRAME_WIDTH - 1 || i == img.width - 1 || i == img.width - FRAME_WIDTH || j == 0 || j == FRAME_WIDTH - 1 || j == img.height - 1 || j == img.height - FRAME_WIDTH) {
+                if (i < FRAME_WIDTH || i >= img.width - FRAME_WIDTH || j < FRAME_WIDTH ||
+                    j >= img.height - FRAME_WIDTH) {
+                    if (i == 0 || i == FRAME_WIDTH - 1 || i == img.width - 1 || i == img.width - FRAME_WIDTH ||
+                        j == 0 || j == FRAME_WIDTH - 1 || j == img.height - 1 || j == img.height - FRAME_WIDTH) {
                         img(i, j, 0) = r;
                         img(i, j, 1) = g;
                         img(i, j, 2) = b;
-                    } else if ((i - FRAME_WIDTH) * (i - FRAME_WIDTH) + (j - FRAME_WIDTH) * (j - FRAME_WIDTH) <= FRAME_WIDTH * FRAME_WIDTH / 4 || (i - FRAME_WIDTH) * (i - FRAME_WIDTH) + (j - img.height + FRAME_WIDTH) * (j - img.height + FRAME_WIDTH) <= FRAME_WIDTH * FRAME_WIDTH / 4 || (i - img.width + FRAME_WIDTH) * (i - img.width + FRAME_WIDTH) + (j - FRAME_WIDTH) * (j - FRAME_WIDTH) <= FRAME_WIDTH * FRAME_WIDTH / 4 || (i - img.width + FRAME_WIDTH) * (i - img.width + FRAME_WIDTH) + (j - img.height + FRAME_WIDTH) * (j - img.height + FRAME_WIDTH) <= FRAME_WIDTH * FRAME_WIDTH / 4) {
+                    } else if ((i - FRAME_WIDTH) * (i - FRAME_WIDTH) + (j - FRAME_WIDTH) * (j - FRAME_WIDTH) <=
+                               FRAME_WIDTH * FRAME_WIDTH / 4 || (i - FRAME_WIDTH) * (i - FRAME_WIDTH) +
+                                                                (j - img.height + FRAME_WIDTH) *
+                                                                (j - img.height + FRAME_WIDTH) <=
+                                                                FRAME_WIDTH * FRAME_WIDTH / 4 ||
+                               (i - img.width + FRAME_WIDTH) * (i - img.width + FRAME_WIDTH) +
+                               (j - FRAME_WIDTH) * (j - FRAME_WIDTH) <= FRAME_WIDTH * FRAME_WIDTH / 4 ||
+                               (i - img.width + FRAME_WIDTH) * (i - img.width + FRAME_WIDTH) +
+                               (j - img.height + FRAME_WIDTH) * (j - img.height + FRAME_WIDTH) <=
+                               FRAME_WIDTH * FRAME_WIDTH / 4) {
                         img(i, j, 0) = r;
                         img(i, j, 1) = g;
                         img(i, j, 2) = b;
@@ -137,7 +155,7 @@ void addFrame(Image &img, string style, string color) {
 // Function to copy the contents of one image to another
 // The function first deallocates the memory of the destination image, then allocates new memory and copies the contents of the source image to the destination image
 
-void copyImage(Image& img, const Image& other) {
+void copyImage(Image &img, const Image &other) {
     if (&img != &other) { // protect against invalid self-assignment
         // 1: deallocate old memory
         if (img.imageData != nullptr) {
@@ -148,10 +166,11 @@ void copyImage(Image& img, const Image& other) {
         img.width = other.width;
         img.height = other.height;
         img.channels = other.channels;
-        img.imageData = (unsigned char*)malloc(img.width * img.height * img.channels);
+        img.imageData = (unsigned char *) malloc(img.width * img.height * img.channels);
         memcpy(img.imageData, other.imageData, img.width * img.height * img.channels);
     }
 }
+
 // Function to apply a series of filters to an image
 // The function prompts the user to choose a filter, applies the chosen filter to the image, and repeats until the user chooses to save the image and exit
 // Function to apply a "sunlight" filter to an image
@@ -165,6 +184,7 @@ void sunlightFilter(Image &img) {
         }
     }
 }
+
 void convertToGrayscale(Image &img) {
     for (int i = 0; i < img.width; i++) {
         for (int j = 0; j < img.height; j++) {
@@ -175,6 +195,7 @@ void convertToGrayscale(Image &img) {
         }
     }
 }
+
 void highPassFilter(Image &img, Image &blurredImg, int blurLevel = 5) {
     // Apply a low-pass filter (blur) to the image
     blurFilter(blurredImg, blurLevel);
@@ -189,6 +210,7 @@ void highPassFilter(Image &img, Image &blurredImg, int blurLevel = 5) {
         }
     }
 }
+
 void oilPaintingFilter(Image &img, int levels = 7, double contrast = 1.09) {
     // Calculate the average color intensity
     double avgColor = 0;
@@ -220,6 +242,7 @@ void oilPaintingFilter(Image &img, int levels = 7, double contrast = 1.09) {
         }
     }
 }
+
 void tvFilter(Image &img) {
     srand(time(0)); // Seed the random number generator
     for (int i = 0; i < img.width; i++) {
@@ -243,36 +266,36 @@ void tvFilter(Image &img) {
         }
     }
 }
+
 void nightPurpleFilter(Image &img) {
     for (int i = 0; i < img.width; i++) {
         for (int j = 0; j < img.height; j++) {
             for (int c = 0; c < img.channels; c++) {
                 // Increase red and blue channels
                 if (c == 0 || c == 2) { // Red or Blue channel
-                    int new_value = img(i, j, c) + 50;
-                    img(i, j, c) = new_value > 255 ? 255 : new_value;
+                    img(i, j, c) = min(255.0, img(i, j, c) * 1.155);
                 }
-                // Decrease green channel
                 if (c == 1) { // Green channel
-                    int new_value = img(i, j, c) - 20;
-                    img(i, j, c) = new_value < 0 ? 0 : new_value;
+                    img(i, j, c) = min(255.0, img(i, j, c) * 0.8);
                 }
             }
         }
     }
 }
+
 void infraredFilter(Image &img) {
     for (int i = 0; i < img.width; i++) {
-         for (int j = 0; j < img.height; j++) {
-             double a=0;
-             a = img(i,j,0)*0.299+img(i,j,1)*0.587+img(i,j,2)*0.114;
-             img(i,j,0) = 255;
-             img(i,j,1) = 255-a;
-             img(i,j,2) = 255-a;
+        for (int j = 0; j < img.height; j++) {
+            double a = 0;
+            a = img(i, j, 0) * 0.299 + img(i, j, 1) * 0.587 + img(i, j, 2) * 0.114;
+            img(i, j, 0) = 255;
+            img(i, j, 1) = 255 - a;
+            img(i, j, 2) = 255 - a;
 
-             }
-         }
+        }
+    }
 }
+
 void skewImage(Image &img, double skewFactor) {
     // Calculate the skew factor in pixels
     int skewPixels = -tan(skewFactor) * img.height;
@@ -291,7 +314,8 @@ void skewImage(Image &img, double skewFactor) {
     for (int i = 0; i < img.width; i++) {
         for (int j = 0; j < img.height; j++) {
             // Calculate the new position of the pixel
-            int newX = i + skewPixels * (j / (double)img.height) + offsetX; // Adjust the x-coordinate based on skew factor and offset
+            int newX = i + skewPixels * (j / (double) img.height) +
+                       offsetX; // Adjust the x-coordinate based on skew factor and offset
             int newY = j;
 
             // Check if the new position is within the bounds of the new image
@@ -307,11 +331,13 @@ void skewImage(Image &img, double skewFactor) {
     // Replace the original image with the new image
     copyImage(img, newImg);
 }
-void applyFilters(Image &img, const string& outputFilename) {
+
+void applyFilters(Image &img, const string &outputFilename) {
     string style, color;
     int choice;
     do {
-        cout << "1. Invert\n2. Rotate 90\n3. Rotate 180\n4. Rotate 270\n5. Blur\n6. Add Frame\n7. Sunlight\n8. Oil Painting\n9. TV Filter\n10. Night Purple Filter\n11. Infrared Filter\n12. Skew Image\n13. Save and Exit\nEnter your choice: ";
+        cout
+                << "1. Invert\n2. Rotate 90\n3. Rotate 180\n4. Rotate 270\n5. Blur\n6. Add Frame\n7. Sunlight\n8. Oil Painting\n9. TV Filter\n10. Night Purple Filter\n11. Infrared Filter\n12. Skew Image\n13. Save and Exit\nEnter your choice: ";
         cin >> choice;
         Image img90(img.height, img.width);
         Image img180(img.width, img.height);
@@ -389,8 +415,9 @@ void applyFilters(Image &img, const string& outputFilename) {
         }
     } while (choice != 13);
 }
+
 int main() {
-    string inputFilename = "s.png", outputFilename= "tt.png";
+    string inputFilename = "luffy.jpg", outputFilename = "tt.png";
     int choice;
     do {
 //        cout << "Enter input filename: ";

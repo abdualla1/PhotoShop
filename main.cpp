@@ -4,12 +4,11 @@ using namespace std;
 #define endl '\n'
 #define ll long long
 #define fast ios::sync_with_stdio(0); cin.tie(0); cout.tie(0);
-void test(){
+void test() {
     Image img("test.jpg");
     img.saveImage("test.png");
-
-<<<<<<< Updated upstream
 }
+<<<<<<< Updated upstream
 <<<<<<< Updated upstream
 =======
 void 
@@ -671,6 +670,10 @@ int main() {
     cout << "Exiting...\n";
 >>>>>>> Stashed changes
 
+=======
+int main() {
+    fast
+>>>>>>> Stashed changes
     return 0;
 
 }

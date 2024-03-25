@@ -190,33 +190,6 @@ void sunlightFilter(Image &img) {
         }
     }
 }
-
-void convertToGrayscale(Image &img) {
-    for (int i = 0; i < img.width; i++) {
-        for (int j = 0; j < img.height; j++) {
-            int gray = (img(i, j, 0) + img(i, j, 1) + img(i, j, 2)) / 3;
-            img(i, j, 0) = gray;
-            img(i, j, 1) = gray;
-            img(i, j, 2) = gray;
-        }
-    }
-}
-
-void highPassFilter(Image &img, Image &blurredImg, int blurLevel = 5) {
-    // Apply a low-pass filter (blur) to the image
-    blurFilter(blurredImg, blurLevel);
-
-    // Subtract the blurred image from the original image
-    for (int i = 0; i < img.width; i++) {
-        for (int j = 0; j < img.height; j++) {
-            for (int c = 0; c < img.channels; c++) {
-                int highPassValue = img(i, j, c) - blurredImg(i, j, c);
-                img(i, j, c) = max(0, min(255, highPassValue));
-            }
-        }
-    }
-}
-
 void oilPaintingFilter(Image &img, int levels = 7, double contrast = 1.09) {
     // Calculate the average color intensity
     double avgColor = 0;

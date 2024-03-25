@@ -5,6 +5,21 @@ using namespace std;
 
 // Function to apply the invert filter to an image
 // The invert filter inverts the color of each pixel in the image
+void copyImage(Image &img, const Image &other) {
+    if (&img != &other) { // protect against invalid self-assignment
+        // 1: deallocate old memory
+        if (img.imageData != nullptr) {
+            stbi_image_free(img.imageData);
+        }
+
+        // 2: allocate new memory and copy the elements
+        img.width = other.width;
+        img.height = other.height;
+        img.channels = other.channels;
+        img.imageData = (unsigned char *) malloc(img.width * img.height * img.channels);
+        memcpy(img.imageData, other.imageData, img.width * img.height * img.channels);
+    }
+}
 void invertFilter(Image &img) {
     for (int i = 0; i < img.width; i++) {
         for (int j = 0; j < img.height; j++) {
@@ -160,22 +175,6 @@ void addFrame(Image &img, string style, string color) {
 }
 // Function to copy the contents of one image to another
 // The function first deallocates the memory of the destination image, then allocates new memory and copies the contents of the source image to the destination image
-
-void copyImage(Image &img, const Image &other) {
-    if (&img != &other) { // protect against invalid self-assignment
-        // 1: deallocate old memory
-        if (img.imageData != nullptr) {
-            stbi_image_free(img.imageData);
-        }
-
-        // 2: allocate new memory and copy the elements
-        img.width = other.width;
-        img.height = other.height;
-        img.channels = other.channels;
-        img.imageData = (unsigned char *) malloc(img.width * img.height * img.channels);
-        memcpy(img.imageData, other.imageData, img.width * img.height * img.channels);
-    }
-}
 
 // Function to apply a series of filters to an image
 // The function prompts the user to choose a filter, applies the chosen filter to the image, and repeats until the user chooses to save the image and exit

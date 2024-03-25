@@ -1,9 +1,11 @@
 #include <bits/stdc++.h>
 #include "Image_Class.h"
+
 using namespace std;
 #define endl '\n'
 #define ll long long
-void copyImage(Image& img, const Image& other) {
+
+void copyImage(Image &img, const Image &other) {
     if (&img != &other) { // protect against invalid self-assignment
         // 1: deallocate old memory
         if (img.imageData != nullptr) {
@@ -14,46 +16,44 @@ void copyImage(Image& img, const Image& other) {
         img.width = other.width;
         img.height = other.height;
         img.channels = other.channels;
-        img.imageData = (unsigned char*)malloc(img.width * img.height * img.channels);
+        img.imageData = (unsigned char *) malloc(img.width * img.height * img.channels);
         memcpy(img.imageData, other.imageData, img.width * img.height * img.channels);
     }
 }
-void greyScale(Image &img)
-{
-    for (int i = 0; i < img.width; i++)
-    {
-        for (int j = 0; j < img.height; j++)
-        {
+
+void greyScale(Image &img) {
+    for (int i = 0; i < img.width; i++) {
+        for (int j = 0; j < img.height; j++) {
             unsigned av = 0;
-            for (int k = 0; k < 3; ++k)
-            {
+            for (int k = 0; k < 3; ++k) {
                 av += img(i, j, k);
             }
             av /= 3;
-            for (int k = 0; k < 3; ++k)
-            {
+            for (int k = 0; k < 3; ++k) {
                 img(i, j, k) = av;
             }
         }
     }
 }
-void BlackAndWhite(Image& Img){
-    int z=0;
-    for (int i=0 ; i<Img.width;i++){
-        for(int j =0; j <Img.height;j++){
-            unsigned int a=0;
-            for (int k=0; k<3;k++){
-                a+=Img(i,j,k);
+
+void BlackAndWhite(Image &Img) {
+    int z = 0;
+    for (int i = 0; i < Img.width; i++) {
+        for (int j = 0; j < Img.height; j++) {
+            unsigned int a = 0;
+            for (int k = 0; k < 3; k++) {
+                a += Img(i, j, k);
             }
-            if (a/3 < 129){
-                z=0;
-            }else z=255;
-            for (int s=0; s < 3;s++ ){
-                Img(i,j,s)=z;
+            if (a / 3 < 129) {
+                z = 0;
+            } else z = 255;
+            for (int s = 0; s < 3; s++) {
+                Img(i, j, s) = z;
             }
         }
     }
 }
+
 void invertFilter(Image &img) {
     for (int i = 0; i < img.width; i++) {
         for (int j = 0; j < img.height; j++) {
@@ -63,66 +63,63 @@ void invertFilter(Image &img) {
         }
     }
 }
-void mergeImages(Image &img1, Image &img2)
-{
+
+void mergeImages(Image &img1, Image &img2) {
     int newWidth = min(img1.width, img2.width);
     int newHeight = min(img1.height, img2.height);
-    for (int i = 0; i < newWidth; i++)
-    {
-        for (int j = 0; j < newHeight; j++)
-        {
-            for (int k = 0; k < 3; ++k)
-            {
+    for (int i = 0; i < newWidth; i++) {
+        for (int j = 0; j < newHeight; j++) {
+            for (int k = 0; k < 3; ++k) {
                 img1(i, j, k) = img1(i * img1.width / newWidth, j * img1.height / newHeight, k);
                 img2(i, j, k) = img2(i * img2.width / newWidth, j * img2.height / newHeight, k);
             }
         }
     }
     Image newImg(img1.width, img1.height);
-    for (int i = 0; i < img1.width; i++)
-    {
-        for (int j = 0; j < img1.height; j++)
-        {
-            for (int k = 0; k < 3; ++k)
-            {
+    for (int i = 0; i < img1.width; i++) {
+        for (int j = 0; j < img1.height; j++) {
+            for (int k = 0; k < 3; ++k) {
                 newImg(i, j, k) = (img1(i, j, k) + img2(i, j, k)) / 2;
             }
         }
     }
     copyImage(img1, newImg);
 }
-void FlipHorizontal(Image& Img){
-    int z=0;
-    int count = Img.width-1;
-    for (int i=0 ; i<Img.width/2;i++){
-        for(int j =0; j <Img.height;j++){
-            unsigned int a=0;
-            for (int s=0; s < 3;s++ ){
-                z=Img(count-i,j,s);
-                Img(count-i,j,s)=Img(i,j,s);
-                Img(i,j,s) =z;
+
+void FlipHorizontal(Image &Img) {
+    int z = 0;
+    int count = Img.width - 1;
+    for (int i = 0; i < Img.width / 2; i++) {
+        for (int j = 0; j < Img.height; j++) {
+            unsigned int a = 0;
+            for (int s = 0; s < 3; s++) {
+                z = Img(count - i, j, s);
+                Img(count - i, j, s) = Img(i, j, s);
+                Img(i, j, s) = z;
             }
         }
     }
     Img.saveImage("flip.png");
     cout << "end";
 }
-void FlipVertical(Image& Img){
-    int z=0 ;
-    int count = Img.height-1;
-    for (int i=0 ; i<Img.width;i++){
-        for(int j =0; j <Img.height/2;j++){
-            unsigned int a=0;
-            for (int s=0; s < 3;s++ ){
-                z=Img(i,count-j,s);
-                Img(i,count-j,s)=Img(i,j,s);
-                Img(i,j,s) =z;
+
+void FlipVertical(Image &Img) {
+    int z = 0;
+    int count = Img.height - 1;
+    for (int i = 0; i < Img.width; i++) {
+        for (int j = 0; j < Img.height / 2; j++) {
+            unsigned int a = 0;
+            for (int s = 0; s < 3; s++) {
+                z = Img(i, count - j, s);
+                Img(i, count - j, s) = Img(i, j, s);
+                Img(i, j, s) = z;
             }
         }
     }
     Img.saveImage("flip.png");
     cout << "end";
 }
+
 void rotate90(Image &img, Image &newImg) {
     for (int i = 0; i < img.width; i++) {
         for (int j = 0; j < img.height; j++) {
@@ -154,47 +151,44 @@ void rotate270(Image &img, Image &newImg) {
         }
     }
 }
+
 // Function to apply a blur filter to an image
 // The blur filter blurs the image by averaging the color of each pixel with the color of its neighbors
-void Darken(Image &img)
-{
-    for (int i = 0; i < img.width; i++)
-    {
-        for (int j = 0; j < img.height; j++)
-        {
-            for (int k = 0; k < 3; ++k)
-            {
+void Darken(Image &img) {
+    for (int i = 0; i < img.width; i++) {
+        for (int j = 0; j < img.height; j++) {
+            for (int k = 0; k < 3; ++k) {
                 img(i, j, k) = img(i, j, k) / 2;
             }
         }
     }
 }
-void Brighten(Image &img)
-{
-    for (int i = 0; i < img.width; i++)
-    {
-        for (int j = 0; j < img.height; j++)
-        {
-            for (int k = 0; k < 3; ++k)
-            {
+
+void Brighten(Image &img) {
+    for (int i = 0; i < img.width; i++) {
+        for (int j = 0; j < img.height; j++) {
+            for (int k = 0; k < 3; ++k) {
                 img(i, j, k) = min(255, img(i, j, k) * 2);
             }
         }
     }
 }
-void Crop(Image& Img, int x, int y, int w, int h){
-    Image Img2(w,h);
-    for (int i=0;i<w;i++){
-        for (int j = 0; j <h ;j++) {
-            for(int k=0; k<3;k++){
 
-                Img2(i,j,k)=Img(i+x,j+y,k);
+void Crop(Image &Img, int x, int y, int w, int h) {
+    Image Img2(w, h);
+    for (int i = 0; i < w; i++) {
+        for (int j = 0; j < h; j++) {
+            for (int k = 0; k < 3; k++) {
+
+                Img2(i, j, k) = Img(i + x, j + y, k);
             }
         }
     }
     copyImage(Img, Img2);
 }
+
 int FRAME_WIDTH = 10;
+
 void addFrame(Image &img, string style, string color) {
     unsigned char r = 0, g = 0, b = 0;
     if (color == "RED") {
@@ -263,28 +257,23 @@ void addFrame(Image &img, string style, string color) {
         }
     }
 }
-void edgeDetection(Image &img)
-{
+
+void edgeDetection(Image &img) {
     greyScale(img);
     int kernelx[3][3] = {{-1, 0, 1},
                          {-2, 0, 2},
                          {-1, 0, 1}};
-    int kernely[3][3] = {{1, 2, 1},
-                         {0, 0, 0},
+    int kernely[3][3] = {{1,  2,  1},
+                         {0,  0,  0},
                          {-1, -2, -1}};
     int thereshold = 100;
     Image newImg(img.width, img.height);
-    for (int i = 1; i < img.width - 1; i++)
-    {
-        for (int j = 1; j < img.height - 1; j++)
-        {
-            for (int k = 0; k < 3; ++k)
-            {
+    for (int i = 1; i < img.width - 1; i++) {
+        for (int j = 1; j < img.height - 1; j++) {
+            for (int k = 0; k < 3; ++k) {
                 int sum1 = 0, sum2 = 0;
-                for (int x = -1; x <= 1; x++)
-                {
-                    for (int y = -1; y <= 1; y++)
-                    {
+                for (int x = -1; x <= 1; x++) {
+                    for (int y = -1; y <= 1; y++) {
                         sum1 += img(i + x, j + y, k) * kernelx[x + 1][y + 1];
                         sum2 += img(i + x, j + y, k) * kernely[x + 1][y + 1];
                     }
@@ -296,23 +285,25 @@ void edgeDetection(Image &img)
     }
     copyImage(img, newImg);
 }
-void Resize(Image& Img,int x_new, int y_new){
-    int wid=Img.width;
-    int heig=Img.height;
-    double z= (double)wid/x_new;
-    double z1 = (double)heig/y_new;
-    Image Imag(x_new,y_new);
-    for (int i=0;i<x_new;i++){
-        for (int j = 0; j <y_new ;j++) {
-            int x1 = i*z;
-            int y1 = j*z1;
-            for(int k=0; k<3;k++){
-                Imag(i,j,k)=Img(x1,y1,k);
+
+void Resize(Image &Img, int x_new, int y_new) {
+    int wid = Img.width;
+    int heig = Img.height;
+    double z = (double) wid / x_new;
+    double z1 = (double) heig / y_new;
+    Image Imag(x_new, y_new);
+    for (int i = 0; i < x_new; i++) {
+        for (int j = 0; j < y_new; j++) {
+            int x1 = i * z;
+            int y1 = j * z1;
+            for (int k = 0; k < 3; k++) {
+                Imag(i, j, k) = Img(x1, y1, k);
             }
         }
     }
     copyImage(Img, Imag);
 }
+
 void blurFilter(Image &img, int blurLevel) {
     // Create a padded image
     Image paddedImg(img.width + 2 * blurLevel, img.height + 2 * blurLevel);
@@ -348,6 +339,7 @@ void blurFilter(Image &img, int blurLevel) {
         }
     }
 }
+
 void sunlightFilter(Image &img) {
     for (int i = 0; i < img.width; i++) {
         for (int j = 0; j < img.height; j++) {
@@ -358,8 +350,10 @@ void sunlightFilter(Image &img) {
         }
     }
 }
-void oilPaintingFilter(Image &img, int levels = 7, double contrast = 1.09) {
-    // Calculate the average color intensity
+
+void oilPaintingFilter(Image &img) {
+    int levels = 7;
+    double contrast = 1.09;
     double avgColor = 0;
     for (int i = 0; i < img.width; i++) {
         for (int j = 0; j < img.height; j++) {
@@ -389,26 +383,21 @@ void oilPaintingFilter(Image &img, int levels = 7, double contrast = 1.09) {
         }
     }
 }
-void oilPainting(Image &img)
-{
+
+void oilPainting(Image &img) {
     float radius = 1;
     Image newImg(img.width, img.height);
-    for (int i = 0; i < img.width; ++i)
-    {
-        for (int j = 0; j < img.height; ++j)
-        {
+    for (int i = 0; i < img.width; ++i) {
+        for (int j = 0; j < img.height; ++j) {
             vector<int> intensityCount(256, 0);
             vector<int> averageR(256, 0);
             vector<int> averageG(256, 0);
             vector<int> averageB(256, 0);
-            for (int dx = -radius; dx <= radius; ++dx)
-            {
-                for (int dy = -radius; dy <= radius; ++dy)
-                {
+            for (int dx = -radius; dx <= radius; ++dx) {
+                for (int dy = -radius; dy <= radius; ++dy) {
                     int nx = i + dx;
                     int ny = j + dy;
-                    if (nx >= 0 && nx < img.width && ny >= 0 && ny < img.height)
-                    {
+                    if (nx >= 0 && nx < img.width && ny >= 0 && ny < img.height) {
                         unsigned curR = img(nx, ny, 0);
                         unsigned curG = img(nx, ny, 1);
                         unsigned curB = img(nx, ny, 2);
@@ -420,16 +409,13 @@ void oilPainting(Image &img)
                     }
                     int curMax = 0;
                     int maxIndex = 0;
-                    for (int i = 0; i < 256; ++i)
-                    {
-                        if (intensityCount[i] > curMax)
-                        {
+                    for (int i = 0; i < 256; ++i) {
+                        if (intensityCount[i] > curMax) {
                             curMax = intensityCount[i];
                             maxIndex = i;
                         }
                     }
-                    if (curMax != 0)
-                    {
+                    if (curMax != 0) {
                         newImg(i, j, 0) = averageR[maxIndex] / curMax;
                         newImg(i, j, 1) = averageG[maxIndex] / curMax;
                         newImg(i, j, 2) = averageB[maxIndex] / curMax;
@@ -440,6 +426,7 @@ void oilPainting(Image &img)
     }
     copyImage(img, newImg);
 }
+
 void tvFilter(Image &img) {
     srand(time(0)); // Seed the random number generator
     for (int i = 0; i < img.width; i++) {
@@ -494,7 +481,7 @@ void infraredFilter(Image &img) {
 }
 
 void skewImage(Image &img, double skewFactor) {
-    skewFactor =-skewFactor;
+    skewFactor = -skewFactor;
     // Calculate the skew factor in pixels
     int skewPixels = -tan(skewFactor) * img.height;
 
@@ -533,6 +520,7 @@ void skewImage(Image &img, double skewFactor) {
 void applyFilters(Image &img, string outputFilename) {
     int choice;
     int x, y, w, h;
+    int versions;
     int x_new, y_new;
     string style, color;
     string secondImageFilename;
@@ -541,7 +529,8 @@ void applyFilters(Image &img, string outputFilename) {
     Image img180(img.width, img.height);
     Image img270(img.height, img.width);
     do {
-        cout << "1. Grey Scale\n2. Black and White\n3. Invert Filter\n4. Merge Images\n5. Flip Horizontal\n6. Flip Vertical\n7. Rotate 90\n8. Rotate 180\n9. Rotate 270\n10. Darken\n11. Brighten\n12. Crop\n13. Add Frame\n14. Edge Detection\n15. Resize\n16. Blur Filter\n17. Sunlight Filter\n18. Oil Painting Filter\n19. Oil Painting\n20. TV Filter\n21. Night Purple Filter\n22. Infrared Filter\n23. Skew Image\n24. Save and Exit\nEnter your choice: ";
+        cout
+                << "1. Grey Scale\n2. Black and White\n3. Invert Filter\n4. Merge Images\n5. Flip Horizontal\n6. Flip Vertical\n7. Rotate 90\n8. Rotate 180\n9. Rotate 270\n10. Darken\n11. Brighten\n12. Crop\n13. Add Frame\n14. Edge Detection\n15. Resize\n16. Blur Filter\n17. Sunlight Filter\n18. Oil Painting Filter\n19. TV Filter\n20. Night Purple Filter\n21. Infrared Filter\n22. Skew Image\n23. Save and Exit\nEnter your choice: ";
         cin >> choice;
         switch (choice) {
             case 1:
@@ -613,40 +602,37 @@ void applyFilters(Image &img, string outputFilename) {
                 sunlightFilter(img);
                 break;
             case 18:
-                int levels;
-                double contrast;
-                cout << "Enter number of levels: ";
-                cin >> levels;
-                cout << "Enter contrast: ";
-                cin >> contrast;
-                oilPaintingFilter(img, levels, contrast);
+                cout << "Enter your version (1, 2): ";
+                cin >> versions;
+                if (versions == 1) {
+                    oilPaintingFilter(img);
+                }  else {
+                    oilPainting(img);
+                }
                 break;
             case 19:
-                oilPainting(img);
-                break;
-            case 20:
                 tvFilter(img);
                 break;
-            case 21:
+            case 20:
                 nightPurpleFilter(img);
                 break;
-            case 22:
+            case 21:
                 infraredFilter(img);
                 break;
-            case 23:
+            case 22:
                 double skewFactor;
                 cout << "Enter skew factor: ";
                 cin >> skewFactor;
                 skewImage(img, skewFactor);
                 break;
-            case 24:
+            case 23:
                 img.saveImage(outputFilename);
                 break;
             default:
                 cout << "Invalid choice\n";
                 break;
         }
-    } while (choice != 24);
+    } while (choice != 23);
 }
 
 int main() {
@@ -663,10 +649,6 @@ int main() {
 
         cout << "Do you want to load another image? (1 for yes, 0 for no): ";
         cin >> choice;
-        if (choice == 1){
-            img.saveImage(outputFilename);
-            continue;
-        }
     } while (choice == 1);
 
     cout << "Exiting...\n";

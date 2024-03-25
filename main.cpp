@@ -189,12 +189,32 @@ void highPassFilter(Image &img, Image &blurredImg, int blurLevel = 5) {
         }
     }
 }
-void oilPaintingFilter(Image &img, int levels = 7) {
+void oilPaintingFilter(Image &img, int levels = 7, double contrast = 1.09) {
+    // Calculate the average color intensity
+    double avgColor = 0;
+    for (int i = 0; i < img.width; i++) {
+        for (int j = 0; j < img.height; j++) {
+            for (int c = 0; c < img.channels; c++) {
+                avgColor += img(i, j, c);
+            }
+        }
+    }
+    avgColor /= (img.width * img.height * img.channels);
+
     for (int i = 0; i < img.width; i++) {
         for (int j = 0; j < img.height; j++) {
             for (int c = 0; c < img.channels; c++) {
                 int color = img(i, j, c);
                 int newColor = ((color * levels) / 256) * (256 / levels);
+
+                // Adjust contrast
+                double diff = newColor - avgColor;
+                diff *= contrast;
+                newColor = avgColor + diff;
+
+                // Clamp the new color value between 0 and 255
+                newColor = max(0, min(255, newColor));
+
                 img(i, j, c) = newColor;
             }
         }

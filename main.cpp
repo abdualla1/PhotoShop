@@ -410,20 +410,18 @@ void oilPainting(Image &img) {
     }
     copyImage(img, newImg);
 }
-
 void tvFilter(Image &img) {
     srand(time(0)); // Seed the random number generator
     for (int i = 0; i < img.width; i++) {
         for (int j = 0; j < img.height; j++) {
-            for (int c = 0; c < img.channels; c++) {
-                int noise = rand() % 50 - 40; // Generate a random number between -20 and 20
+            int noise = rand() % 50 - 40;
+            for (int c = 0; c < img.channels; c++) {// Generate a random number between -20 and 20
                 int new_value = img(i, j, c) + noise;
                 img(i, j, c) = new_value < 0 ? 0 : new_value > 255 ? 255 : new_value;
             }
         }
     }
 }
-
 void nightPurpleFilter(Image &img) {
     for (int i = 0; i < img.width; i++) {
         for (int j = 0; j < img.height; j++) {

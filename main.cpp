@@ -478,42 +478,21 @@ void infraredFilter(Image &img) {
         }
     }
 }
-
-void skewImage(Image &img, double skewFactor) {
-    skewFactor = -skewFactor;
-    // Calculate the skew factor in pixels
-    int skewPixels = -tan(skewFactor) * img.height;
-
-    // Calculate the new dimensions of the image
-    int newWidth = img.width + abs(skewPixels);
-    int newHeight = img.height;
-
-    // Calculate the horizontal offset to center the skewed image
-    int offsetX = skewPixels < 0 ? abs(skewPixels) : 0;
-
-    // Create a new image with the new dimensions
-    Image newImg(newWidth, newHeight);
-
-    // Iterate over each pixel in the original image
+void skewImage(Image &img, double angle) {
+    double skewFactor = tan(angle * M_PI / 180.0) / 1.655; // Convert angle to radians, calculate skew factor and reduce it
+    int newWidth = img.width + abs(int(img.height * skewFactor)); // Calculate new width
+    Image newImg(newWidth, img.height); // Create new image with new dimensions
     for (int i = 0; i < img.width; i++) {
         for (int j = 0; j < img.height; j++) {
-            // Calculate the new position of the pixel
-            int newX = i + skewPixels * (j / (double) img.height) +
-                       offsetX; // Adjust the x-coordinate based on skew factor and offset
-            int newY = j;
-
-            // Check if the new position is within the bounds of the new image
-            if (newX >= 0 && newX < newWidth && newY >= 0 && newY < newHeight) {
-                // Set the color of the new position to the color of the original pixel
+            int newI = i + skewFactor * (img.height - j); // Skew in the clockwise direction
+            if (newI >= 0 && newI < newWidth) { // Check if newI is within new image width
                 for (int c = 0; c < img.channels; c++) {
-                    newImg(newX, newY, c) = img(i, j, c);
+                    newImg(newI, j, c) = img(i, j, c);
                 }
             }
         }
     }
-
-    // Replace the original image with the new image
-    copyImage(img, newImg);
+    copyImage(img, newImg); // Copy new image to original image
 }
 
 void applyFilters(Image &img, string outputFilename) {

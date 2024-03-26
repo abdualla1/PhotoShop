@@ -5,19 +5,16 @@ using namespace std;
 #define endl '\n'
 #define ll long long
 
-void copyImage(Image &img, const Image &other) {
-    if (&img != &other) { // protect against invalid self-assignment
+void copyImage(Image &dist, const Image &src) {
+    if (&dist != &src) { // protect against invalid self-assignment
         // 1: deallocate old memory
-        if (img.imageData != nullptr) {
-            stbi_image_free(img.imageData);
-        }
-
+        stbi_image_free(dist.imageData);
         // 2: allocate new memory and copy the elements
-        img.width = other.width;
-        img.height = other.height;
-        img.channels = other.channels;
-        img.imageData = (unsigned char *) malloc(img.width * img.height * img.channels);
-        memcpy(img.imageData, other.imageData, img.width * img.height * img.channels);
+        dist.width = src.width;
+        dist.height = src.height;
+        dist.channels = src.channels;
+        dist.imageData = static_cast<unsigned char *>(malloc(dist.width * dist.height * dist.channels));
+        memcpy(dist.imageData, src.imageData, dist.width * dist.height * dist.channels);
     }
 }
 
@@ -99,8 +96,6 @@ void FlipHorizontal(Image &Img) {
             }
         }
     }
-    Img.saveImage("flip.png");
-    cout << "end";
 }
 
 void FlipVertical(Image &Img) {
@@ -116,8 +111,6 @@ void FlipVertical(Image &Img) {
             }
         }
     }
-    Img.saveImage("flip.png");
-    cout << "end";
 }
 
 void rotate90(Image &img, Image &newImg) {
@@ -384,7 +377,7 @@ void oilPaintingFilter(Image &img, int levels = 7, double contrast = 1.09) {
 }
 
 void oilPainting(Image &img) {
-    float radius = 1;
+    float radius = 2;
     Image newImg(img.width, img.height);
     for (int i = 0; i < img.width; ++i) {
         for (int j = 0; j < img.height; ++j) {
@@ -433,16 +426,17 @@ void tvFilter(Image &img) {
             for (int c = 0; c < img.channels; c++) {
                 // Increase blue channel
                 if (c == 2) { // Blue channel
-                    int new_value = img(i, j, c) + 10;
-                    img(i, j, c) = new_value > 255 ? 255 : new_value;
+                   img(i, j, c) = min(255.0, img(i, j, c) * 1.15998);
+                }
+                if (c == 1) { // Red or Green channel
+                    img(i, j, c) = min(255.0, img(i, j, c) * 1.099);
                 }
                 // Decrease red and green channels
-                if (c == 0 || c == 1) { // Red or Green channel
-                    int new_value = img(i, j, c) - 15;
-                    img(i, j, c) = new_value < 0 ? 0 : new_value;
+                if (c == 0) { // Red or Green channel
+                    img(i, j, c) = min(255.0, img(i, j, c) * 1.099);
                 }
                 // Add noise
-                int noise = rand() % 40 - 20; // Generate a random number between -20 and 20
+                int noise = rand() % 50 - 30 ; // Generate a random number between -20 and 20
                 int new_value = img(i, j, c) + noise;
                 img(i, j, c) = new_value < 0 ? 0 : new_value > 255 ? 255 : new_value;
             }
@@ -523,7 +517,7 @@ void applyFilters(Image &img, string outputFilename) {
             case 4:
                 cout << "Enter second image filename: ";
                 cin >> secondImageFilename;
-                secondImg = Image(secondImageFilename);
+                secondImg.loadNewImage(secondImageFilename);
                 mergeImages(img, secondImg);
                 break;
             case 5:

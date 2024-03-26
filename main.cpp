@@ -176,13 +176,13 @@
 
     void addFrame(Image &img, string style, string color) {
         unsigned char r = 0, g = 0, b = 0;
-        if (color == "RED") {
+        if (color == "red") {
             r = 255;
-        } else if (color == "GREEN") {
+        } else if (color == "green") {
             g = 255;
-        } else if (color == "BLUE") {
+        } else if (color == "blue") {
             b = 255;
-        } else if (color == "WHITE") {
+        } else if (color == "white") {
             r = 255;
             g = 255;
             b = 255;

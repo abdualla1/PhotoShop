@@ -474,10 +474,17 @@
     }
     void applyFilters(Image &img, string outputFilename) {
         int choice;
+
         do {
             cout
                     << "1. Grey Scale\n2. Black and White\n3. Invert Filter\n4. Merge Images\n5. Flip Horizontal\n6. Flip Vertical\n7. Rotate 90\n8. Rotate 180\n9. Rotate 270\n10. Darken\n11. Brighten\n12. Crop\n13. Add Frame\n14. Edge Detection\n15. Resize\n16. Blur Filter\n17. Sunlight Filter\n18. Oil Painting Filter\n19. TV Filter\n20. Night Purple Filter\n21. Infrared Filter\n22. Skew Image\n23. Save and Exit\nEnter your choice: ";
             cin >> choice;
+            if(cin.fail()){
+                cout << "Invalid input. Please enter an integer." << endl;
+                cin.clear(); // Clear error flags
+                cin.ignore(numeric_limits<streamsize>::max(), '\n'); // Ignore remaining input
+                continue; // Restart the loop
+            }
             int x, y, w, h;
             int versions;
             int x_new, y_new;
@@ -674,7 +681,8 @@
                 cin >> outputFilename;
 
                 ifstream file(inputFilename);
-                if (!file.good()) {
+                ifstream file2(outputFilename);
+                if (!file.good() || !file2.good()) {
                     throw runtime_error("Invalid filename, File Does not Exist");
                 }
 

@@ -351,22 +351,21 @@ void sunlightFilter(Image &img) {
     }
 }
 
-void oilPaintingFilter(Image &img) {
-    int levels = 7;
-    double contrast = 1.09;
+void oilPaintingFilter(Image &img, int levels = 7, double contrast = 1.09) {
+    // Calculate the average color intensity
     double avgColor = 0;
     for (int i = 0; i < img.width; i++) {
         for (int j = 0; j < img.height; j++) {
-            for (int c = 0; c < min(3, img.channels); c++) {
+            for (int c = 0; c < img.channels; c++) {
                 avgColor += img(i, j, c);
             }
         }
     }
-    avgColor /= (img.width * img.height * min(3, img.channels));
+    avgColor /= (img.width * img.height * img.channels);
 
     for (int i = 0; i < img.width; i++) {
         for (int j = 0; j < img.height; j++) {
-            for (int c = 0; c < min(3, img.channels); c++) {
+            for (int c = 0; c < img.channels; c++) {
                 int color = img(i, j, c);
                 int newColor = ((color * levels) / 256) * (256 / levels);
 
@@ -434,12 +433,12 @@ void tvFilter(Image &img) {
             for (int c = 0; c < img.channels; c++) {
                 // Increase blue channel
                 if (c == 2) { // Blue channel
-                    int new_value = img(i, j, c) + 50;
+                    int new_value = img(i, j, c) + 10;
                     img(i, j, c) = new_value > 255 ? 255 : new_value;
                 }
                 // Decrease red and green channels
                 if (c == 0 || c == 1) { // Red or Green channel
-                    int new_value = img(i, j, c) - 20;
+                    int new_value = img(i, j, c) - 15;
                     img(i, j, c) = new_value < 0 ? 0 : new_value;
                 }
                 // Add noise
@@ -519,19 +518,19 @@ void skewImage(Image &img, double skewFactor) {
 
 void applyFilters(Image &img, string outputFilename) {
     int choice;
-    int x, y, w, h;
-    int versions;
-    int x_new, y_new;
-    string style, color;
-    string secondImageFilename;
-    Image secondImg;
-    Image img90(img.height, img.width);
-    Image img180(img.width, img.height);
-    Image img270(img.height, img.width);
     do {
         cout
                 << "1. Grey Scale\n2. Black and White\n3. Invert Filter\n4. Merge Images\n5. Flip Horizontal\n6. Flip Vertical\n7. Rotate 90\n8. Rotate 180\n9. Rotate 270\n10. Darken\n11. Brighten\n12. Crop\n13. Add Frame\n14. Edge Detection\n15. Resize\n16. Blur Filter\n17. Sunlight Filter\n18. Oil Painting Filter\n19. TV Filter\n20. Night Purple Filter\n21. Infrared Filter\n22. Skew Image\n23. Save and Exit\nEnter your choice: ";
         cin >> choice;
+        int x, y, w, h;
+        int versions;
+        int x_new, y_new;
+        string style, color;
+        string secondImageFilename;
+        Image secondImg;
+        Image img90(img.height, img.width);
+        Image img180(img.width, img.height);
+        Image img270(img.height, img.width);
         switch (choice) {
             case 1:
                 greyScale(img);
@@ -649,6 +648,9 @@ int main() {
 
         cout << "Do you want to load another image? (1 for yes, 0 for no): ";
         cin >> choice;
+        if (choice == 1) {
+            img.saveImage(outputFilename);
+        }
     } while (choice == 1);
 
     cout << "Exiting...\n";

@@ -330,7 +330,7 @@
             for (int j = 0; j < img.height; j++) {
                 // Increase red and green channels, decrease blue channel
                 img(i, j, 0) = min(255, img(i, j, 0) + 30); // Red
-                img(i, j, 1) = min(255, img(i, j, 1) + 25); // Green
+                img(i, j, 1) = min(255, img(i, j, 1) + 28); // Green
                 img(i, j, 2) = max(0, img(i, j, 2) - 30); // Blue
             }
         }

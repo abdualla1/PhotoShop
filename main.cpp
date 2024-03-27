@@ -1079,7 +1079,7 @@ void applyFilters(Image &img, string outputFilename)
                 double skewFactor;
                 do
                 {
-                    cout << "Enter skew factor (Max 360): ";
+                    cout << "Enter skew factor (Max 80): ";
                     if (!(cin >> skewFactor))
                     {
                         cout << "Invalid input. Please enter a numeric value." << endl;
@@ -1087,11 +1087,11 @@ void applyFilters(Image &img, string outputFilename)
                         cin.ignore(numeric_limits<streamsize>::max(), '\n'); // Ignore invalid input
                         continue;                                            // Restart the loop
                     }
-                    if (skewFactor <= 0 || skewFactor > 360)
+                    if (skewFactor <= 0 || skewFactor > 80)
                     {
-                        cout << "Invalid skew factor. Please enter a value between 0 and 360." << endl;
+                        cout << "Invalid skew factor. Please enter a value between 0 and 80." << endl;
                     }
-                } while (skewFactor <= 0 || skewFactor > 360);
+                } while (skewFactor <= 0 || skewFactor > 80);
                 skewImage(img, skewFactor);
                 break;
             case 23:

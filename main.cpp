@@ -10,9 +10,9 @@ Authors:
 *Ziad Walid Mohamed (20230164) -> Filters : 1 (Grayscale), 4 (Merge Images), 7 (Darken Image, Brighten Image), 10 (Edge Detection) and 
 14 (OilPainting Filter / Posterzation Filter)
 
-*Abdallah Ayman (20230226) -> Filters : 2 (Black and White), 5 (Flip Image), 8 (Crop Image), 11 (Resize Image) and 17 (Infrared Filter)
+*Abd El Rahman Saber(20230208) -> Filters : 2 (Black and White), 5 (Flip Image), 8 (Crop Image), 11 (Resize Image) and 17 (Infrared Filter)
 
-*Abdalrahman Saber (20230208) -> Filters : 3 (Invert Filter), 6 (Rotate Image), 9 (Adding a Frame), 12 (Blur Filter) and 13 (Sunlight Filter),
+*Abdallah Ayman (20230226) -> Filters : 3 (Invert Filter), 6 (Rotate Image), 9 (Adding a Frame), 12 (Blur Filter) and 13 (Sunlight Filter),
 15 (Tv Filter), 16 (Night Purple Filter) and 18 (Skew Image)
 
 Section: S3 / TA : Ahmed Lotfy
@@ -30,8 +30,21 @@ using namespace std;
 #define endl '\n'
 #define ll long long
 
+/**
+ * @brief Resizes an image to the specified dimensions.
+ *
+ * @param Img The image to resize.
+ * @param x_new The new width of the image.
+ * @param y_new The new height of the image.
+ */
 void Resize(Image &Img, int x_new, int y_new);
 
+/**
+ * @brief Copies the contents of one image to another.
+ *
+ * @param img The image to copy to.
+ * @param other The image to copy from.
+ */
 void copyImage(Image &img, const Image &other)
 {
     if (&img != &other)
@@ -46,6 +59,11 @@ void copyImage(Image &img, const Image &other)
     }
 }
 
+/**
+ * @brief Applies a grey scale filter to an image.
+ *
+ * @param img The image to apply the filter to.
+ */
 void greyScale(Image &img)
 {
     for (int i = 0; i < img.width; i++)
@@ -66,6 +84,11 @@ void greyScale(Image &img)
     }
 }
 
+/**
+ * @brief Applies a black and white filter to an image.
+ *
+ * @param Img The image to apply the filter to.
+ */
 void BlackAndWhite(Image &Img)
 {
     int z = 0;
@@ -92,6 +115,11 @@ void BlackAndWhite(Image &Img)
     }
 }
 
+/**
+ * @brief Applies an invert filter to an image.
+ *
+ * @param img The image to apply the filter to.
+ */
 void invertFilter(Image &img)
 {
     for (int i = 0; i < img.width; i++)
@@ -106,6 +134,12 @@ void invertFilter(Image &img)
     }
 }
 
+/**
+ * @brief Merges two images by cropping them to the same size.
+ *
+ * @param img1 The first image to merge.
+ * @param img2 The second image to merge.
+ */
 void mergeImageCrop(Image &img1, Image &img2)
 {
     int newWidth = min(img1.width, img2.width);
@@ -124,6 +158,12 @@ void mergeImageCrop(Image &img1, Image &img2)
     copyImage(img1, newImg);
 }
 
+/**
+ * @brief Merges two images by resizing them to the same size.
+ *
+ * @param img1 The first image to merge.
+ * @param img2 The second image to merge.
+ */
 void mergeImages(Image &img1, Image &img2)
 {
     int newWidth = min(img1.width, img2.width);
@@ -144,6 +184,11 @@ void mergeImages(Image &img1, Image &img2)
     copyImage(img1, newImg);
 }
 
+/**
+ * @brief Flips an image horizontally.
+ *
+ * @param Img The image to flip.
+ */
 void FlipHorizontal(Image &Img)
 {
     int z = 0;
@@ -162,7 +207,14 @@ void FlipHorizontal(Image &Img)
         }
     }
 }
-
+/**
+ * @brief Flips an image vertically.
+ *
+ * This function iterates over each pixel in the image and swaps the pixel at position (i, j) with the pixel at position (i, height - j - 1),
+ * where i is the x-coordinate, j is the y-coordinate, and height is the height of the image. This effectively flips the image vertically.
+ *
+ * @param Img The image to flip.
+ */
 void FlipVertical(Image &Img)
 {
     int z = 0;
@@ -181,7 +233,14 @@ void FlipVertical(Image &Img)
         }
     }
 }
-
+/**
+ * @brief Rotates an image 90 degrees clockwise.
+ *
+ * This function creates a new image with swapped width and height, and then maps each pixel of the original image to its new position in the rotated image.
+ *
+ * @param img The original image to rotate.
+ * @param newImg The new image to store the rotated image.
+ */
 void rotate90(Image &img, Image &newImg)
 {
     for (int i = 0; i < img.width; i++)
@@ -196,7 +255,15 @@ void rotate90(Image &img, Image &newImg)
     }
 }
 
-// Function to rotate an image 180 degrees
+
+/**
+ * @brief Rotates an image 180 degrees.
+ *
+ * This function creates a new image with the same dimensions as the original, and then maps each pixel of the original image to its new position in the rotated image.
+ *
+ * @param img The original image to rotate.
+ * @param newImg The new image to store the rotated image.
+ */
 void rotate180(Image &img, Image &newImg)
 {
     for (int i = 0; i < img.width; i++)
@@ -211,7 +278,14 @@ void rotate180(Image &img, Image &newImg)
     }
 }
 
-// Function to rotate an image 270 degrees clockwise
+/**
+ * @brief Rotates an image 270 degrees clockwise.
+ *
+ * This function creates a new image with swapped width and height, and then maps each pixel of the original image to its new position in the rotated image.
+ *
+ * @param img The original image to rotate.
+ * @param newImg The new image to store the rotated image.
+ */
 void rotate270(Image &img, Image &newImg)
 {
     for (int i = 0; i < img.width; i++)
@@ -225,7 +299,13 @@ void rotate270(Image &img, Image &newImg)
         }
     }
 }
-
+/**
+ * @brief Darkens an image.
+ *
+ * This function iterates over each pixel in the image and halves its value, effectively darkening the image.
+ *
+ * @param img The image to darken.
+ */
 void Darken(Image &img)
 {
     for (int i = 0; i < img.width; i++)
@@ -239,7 +319,13 @@ void Darken(Image &img)
         }
     }
 }
-
+/**
+ * @brief Brightens an image.
+ *
+ * This function iterates over each pixel in the image and doubles its value, effectively brightening the image. If the new value exceeds 255, it is clamped to 255.
+ *
+ * @param img The image to brighten.
+ */
 void Brighten(Image &img)
 {
     for (int i = 0; i < img.width; i++)
@@ -253,7 +339,17 @@ void Brighten(Image &img)
         }
     }
 }
-
+/**
+ * @brief Crops an image to the specified dimensions.
+ *
+ * This function creates a new image with the specified dimensions, and then copies the corresponding pixels from the original image to the new image.
+ *
+ * @param Img The original image to crop.
+ * @param x The x-coordinate of the top-left corner of the crop rectangle.
+ * @param y The y-coordinate of the top-left corner of the crop rectangle.
+ * @param w The width of the crop rectangle.
+ * @param h The height of the crop rectangle.
+ */
 void Crop(Image &Img, int x, int y, int w, int h)
 {
     Image Img2(w, h);
@@ -270,7 +366,15 @@ void Crop(Image &Img, int x, int y, int w, int h)
     }
     copyImage(Img, Img2);
 }
-
+/**
+ * @brief Adds a frame to an image.
+ *
+ * This function adds a frame to the image based on the specified style and color. The style can be "simple" or "fancy", and the color can be "red", "green", "blue", or "white".
+ *
+ * @param img The image to add a frame to.
+ * @param style The style of the frame ("simple" or "fancy").
+ * @param color The color of the frame ("red", "green", "blue", or "white").
+ */
 void addFrame(Image &img, string style, string color)
 {
     unsigned char r = 0, g = 0, b = 0;
@@ -361,7 +465,13 @@ void addFrame(Image &img, string style, string color)
         }
     }
 }
-
+/**
+ * @brief Applies an edge detection filter to an image.
+ *
+ * This function first converts the image to grayscale, and then applies the Sobel operator to detect the edges in the image.
+ *
+ * @param img The image to apply the filter to.
+ */
 void edgeDetection(Image &img)
 {
     greyScale(img);
@@ -417,7 +527,15 @@ void Resize(Image &Img, int x_new, int y_new)
     }
     copyImage(Img, Imag);
 }
-
+/**
+ * @brief Applies a blur filter to an image.
+ *
+ * This function first creates a padded image, then applies a blur filter to the image.
+ * The blur level determines the size of the kernel used for the blur operation.
+ *
+ * @param img The image to apply the filter to.
+ * @param blurLevel The level of blur to apply.
+ */
 void blurFilter(Image &img, int blurLevel)
 {
     // Create a padded image
@@ -465,7 +583,13 @@ void blurFilter(Image &img, int blurLevel)
         }
     }
 }
-
+/**
+ * @brief Applies a sunlight filter to an image.
+ *
+ * This function increases the red and green channels and decreases the blue channel of each pixel in the image.
+ *
+ * @param img The image to apply the filter to.
+ */
 void sunlightFilter(Image &img)
 {
     for (int i = 0; i < img.width; i++)
@@ -479,7 +603,15 @@ void sunlightFilter(Image &img)
         }
     }
 }
-
+/**
+ * @brief Applies an oil painting filter to an image.
+ *
+ * This function applies an oil painting filter to the image. The user can choose between a posterize filter and an oil filter.
+ *
+ * @param img The image to apply the filter to.
+ * @param levels The number of levels for the posterize filter.
+ * @param contrast The contrast for the posterize filter.
+ */
 void oilPaintingPosterization(Image &img, int levels = 7, double contrast = 1.09)
 {
     // Calculate the average color intensity
@@ -519,6 +651,13 @@ void oilPaintingPosterization(Image &img, int levels = 7, double contrast = 1.09
     }
 }
 
+/**
+ * @brief Applies an oil painting filter to an image.
+ *
+ * This function applies an oil painting filter to the image.
+ *
+ * @param img The image to apply the filter to.
+ */
 void oilPainting(Image &img)
 {
     float radius = 2;
@@ -570,7 +709,13 @@ void oilPainting(Image &img)
     }
     copyImage(img, newImg);
 }
-
+/**
+ * @brief Applies a TV filter to an image.
+ *
+ * This function applies a TV filter to the image, which adds a random noise to each pixel.
+ *
+ * @param img The image to apply the filter to.
+ */
 void tvFilter(Image &img)
 {
     srand(time(0)); // Seed the random number generator
@@ -588,7 +733,13 @@ void tvFilter(Image &img)
         }
     }
 }
-
+/**
+ * @brief Applies a night purple filter to an image.
+ *
+ * This function applies a night purple filter to the image.
+ *
+ * @param img The image to apply the filter to.
+ */
 void nightPurpleFilter(Image &img)
 {
     for (int i = 0; i < img.width; i++)
@@ -611,6 +762,13 @@ void nightPurpleFilter(Image &img)
     }
 }
 
+/**
+ * @brief Applies an infrared filter to an image.
+ *
+ * This function applies an infrared filter to the image.
+ *
+ * @param img The image to apply the filter to.
+ */
 void infraredFilter(Image &img)
 {
     for (int i = 0; i < img.width; i++)
@@ -625,7 +783,14 @@ void infraredFilter(Image &img)
         }
     }
 }
-
+/**
+ * @brief Skews an image by a specified angle.
+ *
+ * This function skews an image by a specified angle.
+ *
+ * @param img The image to skew.
+ * @param angle The angle to skew the image by.
+ */
 void skewImage(Image &img, double angle)
 {
     double skewFactor =
@@ -648,7 +813,14 @@ void skewImage(Image &img, double angle)
     }
     copyImage(img, newImg); // Copy new image to original image
 }
-
+/**
+ * @brief Converts a string to lowercase.
+ *
+ * This function converts a string to lowercase. If the string is "red", "green", "blue", "white", "simple", or "fancy", it returns the string. Otherwise, it returns "x".
+ *
+ * @param str The string to convert to lowercase.
+ * @return The lowercase string, or "x" if the string is not one of the specified values.
+ */
 string toLower(string str)
 {
     transform(str.begin(), str.end(), str.begin(), ::tolower);
@@ -668,7 +840,17 @@ string toLower(string str)
         return "x";
     }
 }
-
+/**
+ * @brief Applies a series of filters to an image based on user input.
+ *
+ * This function presents a menu to the user to choose from a list of image filters. The user can apply multiple filters in a session.
+ * The filters include: Grey Scale, Black and White, Invert Filter, Merge Images, Flip (Horizontally or Vertically), Rotate (90, 180 or 270),
+ * Darken, Brighten, Crop, Add Frame, Edge Detection, Resize, Blur Filter, Sunlight Filter, Oil Painting Filter, TV Filter, Night Purple Filter,
+ * Infrared Filter, and Skew Image. After applying the desired filters, the user can save the modified image to a file.
+ *
+ * @param img The image to apply the filters to.
+ * @param outputFilename The name of the file to save the modified image to.
+ */
 void applyFilters(Image &img, string outputFilename)
 {
     int choice;
@@ -921,7 +1103,16 @@ void applyFilters(Image &img, string outputFilename)
         }
     } while (choice != 23);
 }
-
+/**
+ * @brief The main function of the image processing application.
+ *
+ * This function presents a menu to the user to load an image, apply filters to the image, and save the modified image to a new file.
+ * The user can apply multiple filters in a session. The filters include: Grey Scale, Black and White, Invert Filter, Merge Images,
+ * Flip (Horizontally or Vertically), Rotate (90, 180 or 270), Darken, Brighten, Crop, Add Frame, Edge Detection, Resize, Blur Filter,
+ * Sunlight Filter, Oil Painting Filter, TV Filter, Night Purple Filter, Infrared Filter, and Skew Image.
+ *
+ * @return 0 when the program exits successfully.
+ */
 int main()
 {
     int choice;

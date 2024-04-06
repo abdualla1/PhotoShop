@@ -29,6 +29,7 @@ Date: 14 March 2024
 using namespace std;
 #define endl '\n'
 #define ll long long
+#define stci static_cast<int>
 
 /**
  * @brief Resizes an image to the specified dimensions.
@@ -306,7 +307,7 @@ void rotate270(Image &img, Image &newImg)
  *
  * @param img The image to darken.
  */
-void Darken(Image &img)
+void Darken(Image &img, float level)
 {
     for (int i = 0; i < img.width; i++)
     {
@@ -314,7 +315,7 @@ void Darken(Image &img)
         {
             for (int k = 0; k < 3; ++k)
             {
-                img(i, j, k) = img(i, j, k) / 2;
+                img(i, j, k) = img(i,j,k) - img(i, j, k) / level;
             }
         }
     }
@@ -326,7 +327,7 @@ void Darken(Image &img)
  *
  * @param img The image to brighten.
  */
-void Brighten(Image &img)
+void Brighten(Image &img, float level)
 {
     for (int i = 0; i < img.width; i++)
     {
@@ -334,7 +335,7 @@ void Brighten(Image &img)
         {
             for (int k = 0; k < 3; ++k)
             {
-                img(i, j, k) = min(255, img(i, j, k) * 2);
+                img(i, j, k) = (level != 100)? min(255, stci(img(i, j, k) * level)) : 255;
             }
         }
     }
@@ -866,9 +867,12 @@ void applyFilters(Image &img, string outputFilename)
             cin.ignore(numeric_limits<streamsize>::max(), '\n'); // Ignore remaining input
             continue;                                            // Restart the loop
         }
+        cin.clear();                                         // Clear error flags
+        cin.ignore(numeric_limits<streamsize>::max(), '\n'); // Ignore remaining input
         int x, y, w, h;
         int versions;
         int x_new, y_new;
+        float level;
         string style, color;
         string secondImageFilename;
         Image secondImg;
@@ -947,10 +951,38 @@ void applyFilters(Image &img, string outputFilename)
             copyImage(img, img270);
             break;
         case 10:
-            Darken(img);
+            do{
+                cout << "Enter the level of darkness (from 1 to 100): ";
+                cin >> level;
+                if (cin.fail())
+                {
+                    cout << "Invalid input. Please enter an integer." << endl;
+                    cin.clear();                                         // Clear error flags
+                    cin.ignore(numeric_limits<streamsize>::max(), '\n'); // Ignore remaining input
+                }
+                else if (level < 1 || level > 100)
+                {
+                    cout << "Invalid level. Please enter a value between 1 and 100." << endl;
+                }
+            }while(level < 1 || level > 100);
+            Darken(img, 100 / level);
             break;
         case 11:
-            Brighten(img);
+            do{
+                cout << "Enter the level of darkness (from 1 to 100): ";
+                cin >> level;
+                if (cin.fail())
+                {
+                    cout << "Invalid input. Please enter an integer." << endl;
+                    cin.clear();                                         // Clear error flags
+                    cin.ignore(numeric_limits<streamsize>::max(), '\n'); // Ignore remaining input
+                }
+                else if (level < 1 || level > 100)
+                {
+                    cout << "Invalid level. Please enter a value between 1 and 100." << endl;
+                }
+            }while(level < 1 || level > 100);
+            Brighten(img, 100/(101 - level));
             break;
         case 12:
             do

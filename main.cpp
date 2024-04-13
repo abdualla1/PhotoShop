@@ -1112,7 +1112,7 @@ void applyFilters(Image &img, string outputFilename)
             double skewFactor;
             do
             {
-                cout << "Enter skew factor (Max 360): ";
+                cout << "Enter skew factor (Max 80): ";
                 if (!(cin >> skewFactor))
                 {
                     cout << "Invalid input. Please enter a numeric value." << endl;

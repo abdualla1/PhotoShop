@@ -7,7 +7,7 @@ Black and White, Invert Filter, Merge Images, Flip (Horizontally or Vertically),
 Edge Detection, Resize, Blur Filter, Sunlight Filter, Oil Painting Filter, TV Filter, Night Purple Filter, Infrared Filter, and Skew Image.
 
 Authors:
-*Ziad Walid Mohamed (20230164) -> Filters : 1 (Grayscale), 4 (Merge Images), 7 (Darken Image, Brighten Image), 10 (Edge Detection) and 
+*Ziad Walid Mohamed (20230164) -> Filters : 1 (Grayscale), 4 (Merge Images), 7 (Darken Image, Brighten Image), 10 (Edge Detection) and
 14 (OilPainting Filter / Posterzation Filter)
 
 *Abd El Rahman Saber(20230208) -> Filters : 2 (Black and White), 5 (Flip Image), 8 (Crop Image), 11 (Resize Image) and 17 (Infrared Filter)
@@ -256,7 +256,6 @@ void rotate90(Image &img, Image &newImg)
     }
 }
 
-
 /**
  * @brief Rotates an image 180 degrees.
  *
@@ -315,7 +314,7 @@ void Darken(Image &img, float level)
         {
             for (int k = 0; k < 3; ++k)
             {
-                img(i, j, k) = img(i,j,k) - img(i, j, k) / level;
+                img(i, j, k) = img(i, j, k) - img(i, j, k) / level;
             }
         }
     }
@@ -335,7 +334,7 @@ void Brighten(Image &img, float level)
         {
             for (int k = 0; k < 3; ++k)
             {
-                img(i, j, k) = (level != 100)? min(255, stci(img(i, j, k) * level)) : 255;
+                img(i, j, k) = (level != 100) ? min(255, stci(img(i, j, k) * level)) : 255;
             }
         }
     }
@@ -951,7 +950,8 @@ void applyFilters(Image &img, string outputFilename)
             copyImage(img, img270);
             break;
         case 10:
-            do{
+            do
+            {
                 cout << "Enter the level of darkness (from 1 to 100): ";
                 cin >> level;
                 if (cin.fail())
@@ -964,11 +964,12 @@ void applyFilters(Image &img, string outputFilename)
                 {
                     cout << "Invalid level. Please enter a value between 1 and 100." << endl;
                 }
-            }while(level < 1 || level > 100);
+            } while (level < 1 || level > 100);
             Darken(img, 100 / level);
             break;
         case 11:
-            do{
+            do
+            {
                 cout << "Enter the level of darkness (from 1 to 100): ";
                 cin >> level;
                 if (cin.fail())
@@ -981,8 +982,8 @@ void applyFilters(Image &img, string outputFilename)
                 {
                     cout << "Invalid level. Please enter a value between 1 and 100." << endl;
                 }
-            }while(level < 1 || level > 100);
-            Brighten(img, 100/(101 - level));
+            } while (level < 1 || level > 100);
+            Brighten(img, 100 / (101 - level));
             break;
         case 12:
             do
@@ -1119,11 +1120,11 @@ void applyFilters(Image &img, string outputFilename)
                     cin.ignore(numeric_limits<streamsize>::max(), '\n'); // Ignore invalid input
                     continue;                                            // Restart the loop
                 }
-                if (skewFactor <= 0 || skewFactor > 360)
+                if (skewFactor <= 0 || skewFactor > 80)
                 {
-                    cout << "Invalid skew factor. Please enter a value between 0 and 360." << endl;
+                    cout << "Invalid skew factor. Please enter a value between 0 and 80." << endl;
                 }
-            } while (skewFactor <= 0 || skewFactor > 360);
+            } while (skewFactor <= 0 || skewFactor > 80);
             skewImage(img, skewFactor);
             break;
         case 23:
